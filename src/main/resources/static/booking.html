@@ -22,13 +22,14 @@
         }
         
         .booking-card {
-            background: rgba(255, 255, 255, 0.95);
+            background: var(--dark-bg-card, rgba(42, 42, 42, 0.95));
             backdrop-filter: blur(10px);
             border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
             overflow: hidden;
             max-width: 1200px;
             margin: 0 auto;
+            border: 1px solid var(--dark-border, #404040);
         }
         
         .booking-header {
@@ -40,13 +41,16 @@
         
         .booking-body {
             padding: 40px;
+            background: var(--dark-bg-card, #2a2a2a);
+            color: var(--dark-text-primary, #ffffff);
         }
         
         .bike-info {
-            background: #f8f9fa;
+            background: var(--dark-bg-secondary, #2d2d2d);
             border-radius: 15px;
             padding: 25px;
             margin-bottom: 30px;
+            border: 1px solid var(--dark-border, #404040);
         }
         
         .bike-image {
@@ -64,35 +68,37 @@
         }
         
         .time-slot {
-            border: 2px solid #e9ecef;
+            border: 2px solid var(--dark-border, #404040);
             border-radius: 10px;
             padding: 15px;
             text-align: center;
             cursor: pointer;
             transition: all 0.3s ease;
-            background: white;
+            background: var(--dark-bg-card, #2a2a2a);
+            color: var(--dark-text-primary, #ffffff);
         }
         
         .time-slot:hover {
             border-color: #667eea;
             transform: translateY(-2px);
+            background: var(--dark-bg-hover, #404040);
         }
         
         .time-slot.selected {
             border-color: #667eea;
-            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.2) 0%, rgba(118, 75, 162, 0.2) 100%);
         }
         
         .time-slot.unavailable {
-            background: #f8f9fa;
-            color: #6c757d;
+            background: var(--dark-bg-tertiary, #3a3a3a);
+            color: var(--dark-text-muted, #888888);
             cursor: not-allowed;
             opacity: 0.6;
         }
         
         .time-slot.unavailable:hover {
             transform: none;
-            border-color: #e9ecef;
+            border-color: var(--dark-border, #404040);
         }
         
         .duration-options {
@@ -103,30 +109,34 @@
         
         .duration-option {
             flex: 1;
-            border: 2px solid #e9ecef;
+            border: 2px solid var(--dark-border, #404040);
             border-radius: 10px;
             padding: 20px;
             text-align: center;
             cursor: pointer;
             transition: all 0.3s ease;
+            background: var(--dark-bg-card, #2a2a2a);
+            color: var(--dark-text-primary, #ffffff);
         }
         
         .duration-option:hover {
             border-color: #667eea;
             transform: translateY(-2px);
+            background: var(--dark-bg-hover, #404040);
         }
         
         .duration-option.selected {
             border-color: #667eea;
-            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.2) 0%, rgba(118, 75, 162, 0.2) 100%);
         }
         
         .price-calculation {
-            background: white;
+            background: var(--dark-bg-secondary, #2d2d2d);
             border-radius: 10px;
             padding: 20px;
-            border: 1px solid #e9ecef;
+            border: 1px solid var(--dark-border, #404040);
             margin-top: 20px;
+            color: var(--dark-text-primary, #ffffff);
         }
         
         .price-item {
@@ -136,7 +146,7 @@
         }
         
         .price-total {
-            border-top: 2px solid #e9ecef;
+            border-top: 2px solid var(--dark-border, #404040);
             padding-top: 15px;
             margin-top: 15px;
             font-weight: bold;
@@ -178,8 +188,8 @@
             width: 40px;
             height: 40px;
             border-radius: 50%;
-            background: #e9ecef;
-            color: #6c757d;
+            background: var(--dark-bg-tertiary, #3a3a3a);
+            color: var(--dark-text-muted, #888888);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -193,7 +203,7 @@
         }
         
         .step.completed .step-number {
-            background: #28a745;
+            background: var(--dark-accent-secondary, #28a745);
             color: white;
         }
         
@@ -204,12 +214,12 @@
         .step-connector {
             width: 50px;
             height: 2px;
-            background: #e9ecef;
+            background: var(--dark-border, #404040);
             margin: 0 10px;
         }
         
         .step.completed + .step .step-connector {
-            background: #28a745;
+            background: var(--dark-accent-secondary, #28a745);
         }
     </style>
 </head>

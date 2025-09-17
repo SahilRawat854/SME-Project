@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bike Details - SpinGo</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link href="css/style.css" rel="stylesheet">
+    <link href="css/dark-theme.css" rel="stylesheet">
+    
+    <style>
+        .bike-details-container {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 40px 0;
+        }
+        
+        .bike-details-card {
+            background: var(--dark-bg-card, rgba(42, 42, 42, 0.95));
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            max-width: 1200px;
+            margin: 0 auto;
+            border: 1px solid var(--dark-border, #404040);
+        }
+        
+        .bike-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .bike-body {
+            padding: 40px;
+            background: var(--dark-bg-card, #2a2a2a);
+            color: var(--dark-text-primary, #ffffff);
+        }
+        
+        .bike-image-gallery {
+            position: relative;
+            margin-bottom: 30px;
+        }
+        
+        .main-image {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .thumbnail-gallery {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            overflow-x: auto;
+        }
+        
+        .thumbnail {
+            width: 80px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 8px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+        
+        .thumbnail:hover,
+        .thumbnail.active {
+            border-color: #667eea;
+            transform: scale(1.05);
+        }
+        
+        .bike-info-card {
+            background: var(--dark-bg-secondary, #2d2d2d);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            border: 1px solid var(--dark-border, #404040);
+        }
+        
+        .spec-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--dark-border, #404040);
+        }
+        
+        .spec-item:last-child {
+            border-bottom: none;
+        }
+        
+        .spec-label {
+            color: var(--dark-text-secondary, #b3b3b3);
+            font-weight: 500;
+        }
+        
+        .spec-value {
+            color: var(--dark-text-primary, #ffffff);
+            font-weight: 600;
+        }
+        
+        .price-card {
+            background: var(--dark-bg-secondary, #2d2d2d);
+            border-radius: 15px;
+            padding: 25px;
+            border: 1px solid var(--dark-border, #404040);
+            position: sticky;
+            top: 20px;
+        }
+        
+        .price-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 10px 0;
+        }
+        
+        .price-label {
+            color: var(--dark-text-secondary, #b3b3b3);
+        }
+        
+        .price-value {
+            color: var(--dark-accent-primary, #007bff);
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 10px;
+            padding: 15px 30px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+        
+        .btn-outline-primary {
+            border: 2px solid #667eea;
+            color: #667eea;
+            border-radius: 10px;
+            padding: 12px 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-outline-primary:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        .feature-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            margin-bottom: 15px;
+        }
+        
+        .availability-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 10;
+        }
+        
+        .loading-spinner {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 200px;
+        }
+        
+        .error-message {
+            text-align: center;
+            padding: 40px;
+            color: var(--dark-accent-danger, #dc3545);
+        }
+        
+        .similar-bikes {
+            background: var(--dark-bg-secondary, #2d2d2d);
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 30px;
+            border: 1px solid var(--dark-border, #404040);
+        }
+        
+        .similar-bike-card {
+            background: var(--dark-bg-card, #2a2a2a);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border: 1px solid var(--dark-border, #404040);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .similar-bike-card:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+        }
+        
+        .similar-bike-image {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+        
+        .rating-stars {
+            color: #ffc107;
+            margin-bottom: 10px;
+        }
+        
+        .reviews-summary {
+            background: var(--dark-bg-secondary, #2d2d2d);
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 30px;
+            border: 1px solid var(--dark-border, #404040);
+        }
+        
+        .review-item {
+            background: var(--dark-bg-card, #2a2a2a);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border: 1px solid var(--dark-border, #404040);
+        }
+        
+        .reviewer-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+        
+        .reviewer-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .breadcrumb {
+            background: transparent;
+            padding: 0;
+            margin-bottom: 20px;
+        }
+        
+        .breadcrumb-item a {
+            color: var(--dark-text-secondary, #b3b3b3);
+            text-decoration: none;
+        }
+        
+        .breadcrumb-item a:hover {
+            color: var(--dark-accent-primary, #007bff);
+        }
+        
+        .breadcrumb-item.active {
+            color: var(--dark-text-primary, #ffffff);
+        }
+    </style>
+</head>
+<body>
+    <div class="bike-details-container">
+        <div class="bike-details-card">
+            <!-- Breadcrumb -->
+            <div class="bike-body">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                        <li class="breadcrumb-item"><a href="bikes.html">Bikes</a></li>
+                        <li class="breadcrumb-item active" id="bikeBreadcrumb">Bike Details</li>
+                    </ol>
+                </nav>
+            </div>
+            
+            <!-- Loading State -->
+            <div id="loadingState" class="loading-spinner">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+            
+            <!-- Error State -->
+            <div id="errorState" class="error-message" style="display: none;">
+                <i class="fas fa-exclamation-triangle fa-3x mb-3"></i>
+                <h4>Bike Not Found</h4>
+                <p>The bike you're looking for could not be found.</p>
+                <a href="bikes.html" class="btn btn-primary">Browse All Bikes</a>
+            </div>
+            
+            <!-- Bike Details Content -->
+            <div id="bikeDetailsContent" style="display: none;">
+                <!-- Bike Header -->
+                <div class="bike-header">
+                    <h1 id="bikeTitle" class="mb-3"></h1>
+                    <p id="bikeSubtitle" class="lead mb-0"></p>
+                </div>
+                
+                <div class="bike-body">
+                    <div class="row">
+                        <!-- Left Column - Images and Details -->
+                        <div class="col-lg-8">
+                            <!-- Image Gallery -->
+                            <div class="bike-image-gallery">
+                                <div class="availability-badge">
+                                    <span id="availabilityBadge" class="badge bg-success fs-6">Available</span>
+                                </div>
+                                <img id="mainBikeImage" src="" alt="Bike Image" class="main-image">
+                                <div class="thumbnail-gallery" id="thumbnailGallery">
+                                    <!-- Thumbnails will be populated by JavaScript -->
+                                </div>
+                            </div>
+                            
+                            <!-- Bike Information -->
+                            <div class="bike-info-card">
+                                <h4 class="mb-4"><i class="fas fa-info-circle me-2"></i>Bike Information</h4>
+                                <div id="bikeSpecs">
+                                    <!-- Specifications will be populated by JavaScript -->
+                                </div>
+                            </div>
+                            
+                            <!-- Features -->
+                            <div class="bike-info-card">
+                                <h4 class="mb-4"><i class="fas fa-star me-2"></i>Key Features</h4>
+                                <div class="row" id="bikeFeatures">
+                                    <!-- Features will be populated by JavaScript -->
+                                </div>
+                            </div>
+                            
+                            <!-- Description -->
+                            <div class="bike-info-card">
+                                <h4 class="mb-4"><i class="fas fa-align-left me-2"></i>Description</h4>
+                                <p id="bikeDescription" class="mb-0"></p>
+                            </div>
+                            
+                            <!-- Reviews Summary -->
+                            <div class="reviews-summary">
+                                <h4 class="mb-4"><i class="fas fa-comments me-2"></i>Customer Reviews</h4>
+                                <div class="row mb-4">
+                                    <div class="col-md-6">
+                                        <div class="text-center">
+                                            <div class="h2 text-primary mb-2" id="averageRating">4.8</div>
+                                            <div class="rating-stars mb-2" id="ratingStars">
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star"></i>
+                                            </div>
+                                            <p class="text-muted mb-0" id="totalReviews">Based on 127 reviews</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div id="ratingBreakdown">
+                                            <!-- Rating breakdown will be populated by JavaScript -->
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="recentReviews">
+                                    <!-- Recent reviews will be populated by JavaScript -->
+                                </div>
+                                <div class="text-center mt-3">
+                                    <a href="reviews.html" class="btn btn-outline-primary">View All Reviews</a>
+                                </div>
+                            </div>
+                            
+                            <!-- Similar Bikes -->
+                            <div class="similar-bikes">
+                                <h4 class="mb-4"><i class="fas fa-motorcycle me-2"></i>Similar Bikes</h4>
+                                <div id="similarBikes">
+                                    <!-- Similar bikes will be populated by JavaScript -->
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Right Column - Pricing and Actions -->
+                        <div class="col-lg-4">
+                            <div class="price-card">
+                                <h4 class="mb-4"><i class="fas fa-tags me-2"></i>Pricing</h4>
+                                
+                                <div class="price-item">
+                                    <span class="price-label">Per Hour</span>
+                                    <span class="price-value" id="pricePerHour">₹500</span>
+                                </div>
+                                
+                                <div class="price-item">
+                                    <span class="price-label">Per Day</span>
+                                    <span class="price-value" id="pricePerDay">₹3,000</span>
+                                </div>
+                                
+                                <div class="price-item">
+                                    <span class="price-label">Per Month</span>
+                                    <span class="price-value" id="pricePerMonth">₹60,000</span>
+                                </div>
+                                
+                                <hr class="my-4">
+                                
+                                <div class="d-grid gap-2">
+                                    <button class="btn btn-primary btn-lg" id="rentNowBtn">
+                                        <i class="fas fa-calendar-check me-2"></i>Rent Now
+                                    </button>
+                                    <button class="btn btn-outline-primary" id="addToCartBtn">
+                                        <i class="fas fa-shopping-cart me-2"></i>Add to Cart
+                                    </button>
+                                    <button class="btn btn-outline-secondary" id="saveForLaterBtn">
+                                        <i class="fas fa-heart me-2"></i>Save for Later
+                                    </button>
+                                </div>
+                                
+                                <div class="mt-4">
+                                    <h6 class="mb-3">What's Included:</h6>
+                                    <ul class="list-unstyled">
+                                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Full Insurance Coverage</li>
+                                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i>24/7 Roadside Assistance</li>
+                                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Free Helmet & Safety Gear</li>
+                                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i>GPS Tracking</li>
+                                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Free Delivery & Pickup</li>
+                                    </ul>
+                                </div>
+                                
+                                <div class="mt-4">
+                                    <h6 class="mb-3">Quick Actions:</h6>
+                                    <div class="d-grid gap-2">
+                                        <button class="btn btn-outline-info btn-sm" onclick="bikeDetailsPage.shareBike()">
+                                            <i class="fas fa-share-alt me-2"></i>Share
+                                        </button>
+                                        <button class="btn btn-outline-warning btn-sm" onclick="bikeDetailsPage.reportIssue()">
+                                            <i class="fas fa-flag me-2"></i>Report Issue
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <div class="mt-4">
+                                    <small class="text-muted">
+                                        <i class="fas fa-shield-alt me-1"></i>
+                                        Secure booking with 256-bit SSL encryption
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/auth-manager.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/bike-details.js"></script>
+</body>
+</html>

@@ -264,11 +264,9 @@ class SpinGoApp {
 
     // Navigation Methods
     viewBikeDetails(bikeId) {
-        if (this.isConnected) {
-            window.location.href = `bike-details.html?id=${bikeId}`;
-        } else {
-            this.showAlert('Backend is not connected. Please check the API connection.', 'warning');
-        }
+        // Always navigate to bike details page, even if backend is not connected
+        // The bike details page will handle loading mock data if needed
+        window.location.href = `bike-details.html?id=${bikeId}`;
     }
 
     // API Methods
