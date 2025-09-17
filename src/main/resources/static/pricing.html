@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pricing - SpinGo Premium Bike Rental Service</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link href="css/style.css" rel="stylesheet">
+    <link href="css/dark-theme.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <i class="fas fa-motorcycle"></i> SpinGo
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="bikes.html">Browse Bikes</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="pricing.html">Pricing</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="about.html">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="contact.html">Contact</a>
+                    </li>
+                </ul>
+                
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="login.html">
+                            <i class="fas fa-sign-in-alt"></i> Login
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main content area with padding for fixed navbar -->
+    <main style="margin-top: 56px;">
+        <!-- Hero Section -->
+        <section class="hero-section py-5">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-lg-6">
+                        <h1 class="display-4 fw-bold text-white mb-4">Transparent Pricing</h1>
+                        <p class="lead text-light mb-4">Choose the perfect plan for your bike rental needs. No hidden fees, no surprises - just great value for money.</p>
+                        <div class="d-flex gap-3">
+                            <button class="btn btn-primary btn-lg" onclick="window.location.href='bikes.html'">
+                                <i class="fas fa-motorcycle"></i> Browse Bikes
+                            </button>
+                            <button class="btn btn-outline-light btn-lg" onclick="window.location.href='contact.html'">
+                                <i class="fas fa-phone"></i> Contact Us
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <img src="https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=600&h=400&fit=crop&crop=center" 
+                             alt="Bike Pricing" class="img-fluid rounded-3 shadow-lg">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Pricing Plans -->
+        <section class="py-5">
+            <div class="container">
+                <div class="row text-center mb-5">
+                    <div class="col-12">
+                        <h2 class="display-5 fw-bold text-white mb-3">Choose Your Plan</h2>
+                        <p class="lead text-light">Flexible pricing options to suit every need and budget</p>
+                    </div>
+                </div>
+
+                <div class="row g-4">
+                    <!-- Hourly Plan -->
+                    <div class="col-lg-4 col-md-6">
+                        <div class="card pricing-card h-100">
+                            <div class="card-body text-center p-4">
+                                <div class="pricing-icon mb-3">
+                                    <i class="fas fa-clock fa-3x text-primary"></i>
+                                </div>
+                                <h3 class="card-title text-white">Hourly Rental</h3>
+                                <p class="text-light mb-4">Perfect for short trips and quick rides around the city</p>
+                                
+                                <div class="pricing-amount mb-4">
+                                    <span class="display-4 fw-bold text-primary">₹1,500</span>
+                                    <span class="text-light">/ hour</span>
+                                </div>
+
+                                <ul class="list-unstyled text-start mb-4">
+                                    <li class="mb-2"><i class="fas fa-check text-success me-2"></i> <span class="text-light">Flexible timing</span></li>
+                                    <li class="mb-2"><i class="fas fa-check text-success me-2"></i> <span class="text-light">No long-term commitment</span></li>
+                                    <li class="mb-2"><i class="fas fa-check text-success me-2"></i> <span class="text-light">Instant booking</span></li>
+                                    <li class="mb-2"><i class="fas fa-check text-success me-2"></i> <span class="text-light">24/7 customer support</span></li>
+                                </ul>
+
+                                <button class="btn btn-primary w-100" onclick="window.location.href='bikes.html'">
+                                    <i class="fas fa-calendar-plus"></i> Book Now
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Daily Plan -->
+                    <div class="col-lg-4 col-md-6">
+                        <div class="card pricing-card h-100 border-primary">
+                            <div class="card-body text-center p-4">
+                                <div class="pricing-badge">
+                                    <span class="badge bg-primary">Most Popular</span>
+                                </div>
+                                <div class="pricing-icon mb-3">
+                                    <i class="fas fa-calendar-day fa-3x text-primary"></i>
+                                </div>
+                                <h3 class="card-title text-white">Daily Rental</h3>
+                                <p class="text-light mb-4">Ideal for day trips and extended city exploration</p>
+                                
+                                <div class="pricing-amount mb-4">
+                                    <span class="display-4 fw-bold text-primary">₹8,500</span>
+                                    <span class="text-light">/ day</span>
+                                </div>
+
+                                <ul class="list-unstyled text-start mb-4">
+                                    <li class="mb-2"><i class="fas fa-check text-success me-2"></i> <span class="text-light">Up to 24 hours</span></li>
+                                    <li class="mb-2"><i class="fas fa-check text-success me-2"></i> <span class="text-light">Unlimited kilometers</span></li>
+                                    <li class="mb-2"><i class="fas fa-check text-success me-2"></i> <span class="text-light">Free helmet & safety gear</span></li>
+                                    <li class="mb-2"><i class="fas fa-check text-success me-2"></i> <span class="text-light">Roadside assistance</span></li>
+                                    <li class="mb-2"><i class="fas fa-check text-success me-2"></i> <span class="text-light">Insurance included</span></li>
+                                </ul>
+
+                                <button class="btn btn-primary w-100" onclick="window.location.href='bikes.html'">
+                                    <i class="fas fa-calendar-plus"></i> Book Now
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Monthly Plan -->
+                    <div class="col-lg-4 col-md-6">
+                        <div class="card pricing-card h-100">
+                            <div class="card-body text-center p-4">
+                                <div class="pricing-icon mb-3">
+                                    <i class="fas fa-calendar-alt fa-3x text-primary"></i>
+                                </div>
+                                <h3 class="card-title text-white">Monthly Rental</h3>
+                                <p class="text-light mb-4">Best value for regular commuters and long-term users</p>
+                                
+                                <div class="pricing-amount mb-4">
+                                    <span class="display-4 fw-bold text-primary">₹1,65,000</span>
+                                    <span class="text-light">/ month</span>
+                                </div>
+
+                                <ul class="list-unstyled text-start mb-4">
+                                    <li class="mb-2"><i class="fas fa-check text-success me-2"></i> <span class="text-light">Full month access</span></li>
+                                    <li class="mb-2"><i class="fas fa-check text-success me-2"></i> <span class="text-light">Priority bike selection</span></li>
+                                    <li class="mb-2"><i class="fas fa-check text-success me-2"></i> <span class="text-light">Free maintenance</span></li>
+                                    <li class="mb-2"><i class="fas fa-check text-success me-2"></i> <span class="text-light">Dedicated support</span></li>
+                                    <li class="mb-2"><i class="fas fa-check text-success me-2"></i> <span class="text-light">Loyalty rewards</span></li>
+                                </ul>
+
+                                <button class="btn btn-primary w-100" onclick="window.location.href='contact.html'">
+                                    <i class="fas fa-phone"></i> Contact Sales
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Bike Categories Pricing -->
+        <section class="py-5 bg-dark">
+            <div class="container">
+                <div class="row text-center mb-5">
+                    <div class="col-12">
+                        <h2 class="display-5 fw-bold text-white mb-3">Bike Category Pricing</h2>
+                        <p class="lead text-light">Different rates for different bike types</p>
+                    </div>
+                </div>
+
+                <div class="row g-4">
+                    <div class="col-lg-3 col-md-6">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <i class="fas fa-motorcycle fa-2x text-primary mb-3"></i>
+                                <h5 class="card-title text-white">Sport Bikes</h5>
+                                <p class="text-light small">High-performance motorcycles</p>
+                                <div class="pricing-details">
+                                    <div class="text-primary fw-bold">₹2,075/hour</div>
+                                    <div class="text-light small">₹12,450/day</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3 col-md-6">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <i class="fas fa-bicycle fa-2x text-success mb-3"></i>
+                                <h5 class="card-title text-white">Standard Bikes</h5>
+                                <p class="text-light small">Comfortable city rides</p>
+                                <div class="pricing-details">
+                                    <div class="text-primary fw-bold">₹1,660/hour</div>
+                                    <div class="text-light small">₹9,960/day</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3 col-md-6">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <i class="fas fa-road fa-2x text-warning mb-3"></i>
+                                <h5 class="card-title text-white">Cruiser Bikes</h5>
+                                <p class="text-light small">Long-distance comfort</p>
+                                <div class="pricing-details">
+                                    <div class="text-primary fw-bold">₹1,494/hour</div>
+                                    <div class="text-light small">₹8,300/day</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3 col-md-6">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <i class="fas fa-mountain fa-2x text-info mb-3"></i>
+                                <h5 class="card-title text-white">Adventure Bikes</h5>
+                                <p class="text-light small">Off-road capabilities</p>
+                                <div class="pricing-details">
+                                    <div class="text-primary fw-bold">₹2,490/hour</div>
+                                    <div class="text-light small">₹14,950/day</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Additional Services -->
+        <section class="py-5">
+            <div class="container">
+                <div class="row text-center mb-5">
+                    <div class="col-12">
+                        <h2 class="display-5 fw-bold text-white mb-3">Additional Services</h2>
+                        <p class="lead text-light">Enhance your rental experience</p>
+                    </div>
+                </div>
+
+                <div class="row g-4">
+                    <div class="col-lg-4 col-md-6">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <i class="fas fa-shield-alt fa-2x text-success mb-3"></i>
+                                <h5 class="card-title text-white">Insurance Coverage</h5>
+                                <p class="text-light">Comprehensive protection for your peace of mind</p>
+                                <div class="text-primary fw-bold">₹500/day</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4 col-md-6">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <i class="fas fa-tools fa-2x text-warning mb-3"></i>
+                                <h5 class="card-title text-white">Maintenance Service</h5>
+                                <p class="text-light">Regular maintenance and safety checks</p>
+                                <div class="text-primary fw-bold">₹1,000/month</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4 col-md-6">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <i class="fas fa-headset fa-2x text-info mb-3"></i>
+                                <h5 class="card-title text-white">24/7 Support</h5>
+                                <p class="text-light">Round-the-clock customer assistance</p>
+                                <div class="text-primary fw-bold">Free</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ Section -->
+        <section class="py-5 bg-dark">
+            <div class="container">
+                <div class="row text-center mb-5">
+                    <div class="col-12">
+                        <h2 class="display-5 fw-bold text-white mb-3">Frequently Asked Questions</h2>
+                        <p class="lead text-light">Everything you need to know about our pricing</p>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-8 mx-auto">
+                        <div class="accordion" id="pricingFAQ">
+                            <div class="accordion-item bg-dark border-secondary">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button bg-dark text-white" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                                        Are there any hidden fees?
+                                    </button>
+                                </h2>
+                                <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#pricingFAQ">
+                                    <div class="accordion-body text-light">
+                                        No hidden fees! Our pricing is completely transparent. The only additional charges are for optional services like insurance or delivery.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="accordion-item bg-dark border-secondary">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed bg-dark text-white" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                                        Can I cancel my booking?
+                                    </button>
+                                </h2>
+                                <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#pricingFAQ">
+                                    <div class="accordion-body text-light">
+                                        Yes, you can cancel your booking up to 2 hours before the scheduled pickup time for a full refund.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="accordion-item bg-dark border-secondary">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed bg-dark text-white" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                                        Do you offer group discounts?
+                                    </button>
+                                </h2>
+                                <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#pricingFAQ">
+                                    <div class="accordion-body text-light">
+                                        Yes! We offer special group discounts for bookings of 5 or more bikes. Contact us for custom pricing.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="accordion-item bg-dark border-secondary">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed bg-dark text-white" type="button" data-bs-toggle="collapse" data-bs-target="#faq4">
+                                        What payment methods do you accept?
+                                    </button>
+                                </h2>
+                                <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#pricingFAQ">
+                                    <div class="accordion-body text-light">
+                                        We accept all major credit cards, UPI, net banking, and digital wallets like Paytm, PhonePe, and Google Pay.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h5><i class="fas fa-motorcycle"></i> SpinGo</h5>
+                    <p>Your trusted partner for premium bike rental services.</p>
+                </div>
+                <div class="col-md-8 text-md-end">
+                    <p class="mb-0">&copy; 2024 SpinGo. All rights reserved.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

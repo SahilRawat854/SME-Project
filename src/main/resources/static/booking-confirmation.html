@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Confirmation - SpinGo</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link href="css/style.css" rel="stylesheet">
+    <link href="css/dark-theme.css" rel="stylesheet">
+    
+    <style>
+        .confirmation-container {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 40px 0;
+        }
+        
+        .confirmation-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .confirmation-header {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        .confirmation-body {
+            padding: 40px;
+        }
+        
+        .success-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            animation: bounce 2s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-10px);
+            }
+            60% {
+                transform: translateY(-5px);
+            }
+        }
+        
+        .booking-details {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+        
+        .detail-label {
+            font-weight: 600;
+            color: #495057;
+        }
+        
+        .detail-value {
+            color: #333;
+        }
+        
+        .qr-code {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid #e9ecef;
+        }
+        
+        .qr-placeholder {
+            width: 150px;
+            height: 150px;
+            background: #f8f9fa;
+            border: 2px dashed #dee2e6;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            color: #6c757d;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 10px;
+            padding: 12px 30px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+        
+        .btn-outline-primary {
+            border: 2px solid #667eea;
+            color: #667eea;
+            border-radius: 10px;
+            padding: 12px 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-outline-primary:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            border: none;
+            border-radius: 10px;
+            padding: 12px 30px;
+            font-weight: 600;
+        }
+        
+        .timeline {
+            position: relative;
+            padding-left: 30px;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 15px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #e9ecef;
+        }
+        
+        .timeline-item {
+            position: relative;
+            margin-bottom: 30px;
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -22px;
+            top: 5px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #28a745;
+            border: 3px solid white;
+            box-shadow: 0 0 0 3px #e9ecef;
+        }
+        
+        .timeline-item.completed::before {
+            background: #28a745;
+        }
+        
+        .timeline-item.current::before {
+            background: #667eea;
+            animation: pulse 2s infinite;
+        }
+        
+        .timeline-item.pending::before {
+            background: #e9ecef;
+        }
+        
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(102, 126, 234, 0.7);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(102, 126, 234, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(102, 126, 234, 0);
+            }
+        }
+        
+        .timeline-content {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            border: 1px solid #e9ecef;
+        }
+        
+        .timeline-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .timeline-description {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+        
+        .important-notice {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 30px;
+        }
+        
+        .important-notice h6 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+        
+        .important-notice ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+        
+        .important-notice li {
+            color: #856404;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="confirmation-container">
+        <div class="confirmation-card">
+            <!-- Confirmation Header -->
+            <div class="confirmation-header">
+                <div class="success-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <h2 class="mb-3">Booking Confirmed!</h2>
+                <p class="mb-0">Your bike rental has been successfully booked</p>
+            </div>
+            
+            <div class="confirmation-body">
+                <!-- Booking Details -->
+                <div class="booking-details">
+                    <h5 class="mb-3"><i class="fas fa-receipt me-2"></i>Booking Details</h5>
+                    
+                    <div class="detail-row">
+                        <span class="detail-label">Booking ID</span>
+                        <span class="detail-value fw-bold" id="bookingId">#SG2024012001</span>
+                    </div>
+                    
+                    <div class="detail-row">
+                        <span class="detail-label">Bike</span>
+                        <span class="detail-value" id="bikeName">Honda CBR600RR (2023)</span>
+                    </div>
+                    
+                    <div class="detail-row">
+                        <span class="detail-label">Pickup Date & Time</span>
+                        <span class="detail-value" id="pickupDateTime">Jan 20, 2024 at 10:00 AM</span>
+                    </div>
+                    
+                    <div class="detail-row">
+                        <span class="detail-label">Return Date & Time</span>
+                        <span class="detail-value" id="returnDateTime">Jan 22, 2024 at 10:00 AM</span>
+                    </div>
+                    
+                    <div class="detail-row">
+                        <span class="detail-label">Duration</span>
+                        <span class="detail-value" id="duration">2 days (48 hours)</span>
+                    </div>
+                    
+                    <div class="detail-row">
+                        <span class="detail-label">Pickup Location</span>
+                        <span class="detail-value" id="pickupLocation">Mumbai Central</span>
+                    </div>
+                    
+                    <div class="detail-row">
+                        <span class="detail-label">Total Amount</span>
+                        <span class="detail-value fw-bold text-primary" id="totalAmount">₹25,830</span>
+                    </div>
+                    
+                    <div class="detail-row">
+                        <span class="detail-label">Payment Status</span>
+                        <span class="detail-value">
+                            <span class="badge bg-success">Paid</span>
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <!-- Left Column - QR Code -->
+                    <div class="col-md-6">
+                        <div class="qr-code">
+                            <h6 class="mb-3">Booking QR Code</h6>
+                            <div class="qr-placeholder">
+                                <i class="fas fa-qrcode fa-3x"></i>
+                            </div>
+                            <p class="text-muted small mb-0">Show this QR code at pickup location</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Right Column - Timeline -->
+                    <div class="col-md-6">
+                        <h6 class="mb-3">Booking Timeline</h6>
+                        <div class="timeline">
+                            <div class="timeline-item completed">
+                                <div class="timeline-content">
+                                    <div class="timeline-title">Booking Confirmed</div>
+                                    <div class="timeline-description">Your booking has been confirmed and payment processed</div>
+                                </div>
+                            </div>
+                            
+                            <div class="timeline-item current">
+                                <div class="timeline-content">
+                                    <div class="timeline-title">Preparing Your Bike</div>
+                                    <div class="timeline-description">We're preparing your bike for pickup</div>
+                                </div>
+                            </div>
+                            
+                            <div class="timeline-item pending">
+                                <div class="timeline-content">
+                                    <div class="timeline-title">Ready for Pickup</div>
+                                    <div class="timeline-description">Your bike will be ready at the scheduled time</div>
+                                </div>
+                            </div>
+                            
+                            <div class="timeline-item pending">
+                                <div class="timeline-content">
+                                    <div class="timeline-title">Rental Period</div>
+                                    <div class="timeline-description">Enjoy your ride!</div>
+                                </div>
+                            </div>
+                            
+                            <div class="timeline-item pending">
+                                <div class="timeline-content">
+                                    <div class="timeline-title">Return & Completion</div>
+                                    <div class="timeline-description">Return the bike and complete your rental</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Important Notice -->
+                <div class="important-notice">
+                    <h6><i class="fas fa-exclamation-triangle me-2"></i>Important Information</h6>
+                    <ul>
+                        <li>Please arrive 15 minutes before your scheduled pickup time</li>
+                        <li>Bring a valid driving license and the same payment method used for booking</li>
+                        <li>Inspect the bike thoroughly before taking it</li>
+                        <li>Contact us immediately if you need to modify or cancel your booking</li>
+                        <li>Return the bike in the same condition to avoid additional charges</li>
+                    </ul>
+                </div>
+                
+                <!-- Action Buttons -->
+                <div class="action-buttons">
+                    <button class="btn btn-primary" onclick="window.print()">
+                        <i class="fas fa-print me-2"></i>Print Booking
+                    </button>
+                    <button class="btn btn-outline-primary" onclick="downloadBooking()">
+                        <i class="fas fa-download me-2"></i>Download PDF
+                    </button>
+                    <button class="btn btn-success" onclick="window.location.href='dashboard.html'">
+                        <i class="fas fa-tachometer-alt me-2"></i>Go to Dashboard
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/booking-confirmation.js"></script>
+</body>
+</html>

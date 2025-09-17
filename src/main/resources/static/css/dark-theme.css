@@ -1,0 +1,470 @@
+/* Dark Theme for SpinGo Bike Rental Application */
+
+:root {
+    /* Dark Theme Color Palette */
+    --dark-bg-primary: #1a1a1a;
+    --dark-bg-secondary: #2d2d2d;
+    --dark-bg-tertiary: #3a3a3a;
+    --dark-bg-card: #2a2a2a;
+    --dark-bg-hover: #404040;
+    
+    --dark-text-primary: #ffffff;
+    --dark-text-secondary: #b3b3b3;
+    --dark-text-muted: #888888;
+    
+    --dark-border: #404040;
+    --dark-border-light: #555555;
+    
+    --dark-accent-primary: #007bff;
+    --dark-accent-secondary: #28a745;
+    --dark-accent-warning: #ffc107;
+    --dark-accent-danger: #dc3545;
+    --dark-accent-info: #17a2b8;
+    
+    --dark-shadow: rgba(0, 0, 0, 0.3);
+    --dark-shadow-lg: rgba(0, 0, 0, 0.5);
+}
+
+/* Apply dark theme to body and main elements */
+body {
+    background-color: var(--dark-bg-primary) !important;
+    color: var(--dark-text-primary) !important;
+}
+
+/* Navigation Bar */
+.navbar {
+    background-color: var(--dark-bg-secondary) !important;
+    border-bottom: 1px solid var(--dark-border);
+}
+
+.navbar-brand,
+.navbar-nav .nav-link {
+    color: var(--dark-text-primary) !important;
+}
+
+.navbar-nav .nav-link:hover {
+    color: var(--dark-accent-primary) !important;
+}
+
+.navbar-toggler {
+    border-color: var(--dark-border);
+}
+
+.navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.85%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+/* Dropdown Menu */
+.dropdown-menu {
+    background-color: var(--dark-bg-card) !important;
+    border: 1px solid var(--dark-border);
+}
+
+.dropdown-item {
+    color: var(--dark-text-primary) !important;
+}
+
+.dropdown-item:hover {
+    background-color: var(--dark-bg-hover) !important;
+    color: var(--dark-text-primary) !important;
+}
+
+/* Cards */
+.card {
+    background-color: var(--dark-bg-card) !important;
+    border: 1px solid var(--dark-border) !important;
+    color: var(--dark-text-primary) !important;
+}
+
+.card-header {
+    background-color: var(--dark-bg-tertiary) !important;
+    border-bottom: 1px solid var(--dark-border) !important;
+    color: var(--dark-text-primary) !important;
+}
+
+.card-footer {
+    background-color: var(--dark-bg-tertiary) !important;
+    border-top: 1px solid var(--dark-border) !important;
+}
+
+/* Forms */
+.form-control {
+    background-color: var(--dark-bg-secondary) !important;
+    border: 1px solid var(--dark-border) !important;
+    color: var(--dark-text-primary) !important;
+}
+
+.form-control:focus {
+    background-color: var(--dark-bg-secondary) !important;
+    border-color: var(--dark-accent-primary) !important;
+    color: var(--dark-text-primary) !important;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25) !important;
+}
+
+.form-select {
+    background-color: var(--dark-bg-secondary) !important;
+    border: 1px solid var(--dark-border) !important;
+    color: var(--dark-text-primary) !important;
+}
+
+.form-select:focus {
+    background-color: var(--dark-bg-secondary) !important;
+    border-color: var(--dark-accent-primary) !important;
+    color: var(--dark-text-primary) !important;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25) !important;
+}
+
+.form-label {
+    color: var(--dark-text-primary) !important;
+}
+
+.form-check-input {
+    background-color: var(--dark-bg-secondary) !important;
+    border: 1px solid var(--dark-border) !important;
+}
+
+.form-check-input:checked {
+    background-color: var(--dark-accent-primary) !important;
+    border-color: var(--dark-accent-primary) !important;
+}
+
+.form-check-label {
+    color: var(--dark-text-primary) !important;
+}
+
+/* Input Groups */
+.input-group-text {
+    background-color: var(--dark-bg-tertiary) !important;
+    border: 1px solid var(--dark-border) !important;
+    color: var(--dark-text-primary) !important;
+}
+
+/* Buttons */
+.btn-primary {
+    background-color: var(--dark-accent-primary) !important;
+    border-color: var(--dark-accent-primary) !important;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3 !important;
+    border-color: #0056b3 !important;
+}
+
+.btn-outline-primary {
+    color: var(--dark-accent-primary) !important;
+    border-color: var(--dark-accent-primary) !important;
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--dark-accent-primary) !important;
+    border-color: var(--dark-accent-primary) !important;
+}
+
+.btn-success {
+    background-color: var(--dark-accent-secondary) !important;
+    border-color: var(--dark-accent-secondary) !important;
+}
+
+.btn-outline-success {
+    color: var(--dark-accent-secondary) !important;
+    border-color: var(--dark-accent-secondary) !important;
+}
+
+.btn-outline-success:hover {
+    background-color: var(--dark-accent-secondary) !important;
+    border-color: var(--dark-accent-secondary) !important;
+}
+
+.btn-warning {
+    background-color: var(--dark-accent-warning) !important;
+    border-color: var(--dark-accent-warning) !important;
+    color: #000 !important;
+}
+
+.btn-danger {
+    background-color: var(--dark-accent-danger) !important;
+    border-color: var(--dark-accent-danger) !important;
+}
+
+.btn-info {
+    background-color: var(--dark-accent-info) !important;
+    border-color: var(--dark-accent-info) !important;
+}
+
+.btn-outline-secondary {
+    color: var(--dark-text-secondary) !important;
+    border-color: var(--dark-border) !important;
+}
+
+.btn-outline-secondary:hover {
+    background-color: var(--dark-bg-hover) !important;
+    border-color: var(--dark-border) !important;
+    color: var(--dark-text-primary) !important;
+}
+
+/* Alerts */
+.alert {
+    border: 1px solid var(--dark-border) !important;
+}
+
+.alert-primary {
+    background-color: rgba(0, 123, 255, 0.1) !important;
+    color: var(--dark-accent-primary) !important;
+    border-color: var(--dark-accent-primary) !important;
+}
+
+.alert-success {
+    background-color: rgba(40, 167, 69, 0.1) !important;
+    color: var(--dark-accent-secondary) !important;
+    border-color: var(--dark-accent-secondary) !important;
+}
+
+.alert-warning {
+    background-color: rgba(255, 193, 7, 0.1) !important;
+    color: var(--dark-accent-warning) !important;
+    border-color: var(--dark-accent-warning) !important;
+}
+
+.alert-danger {
+    background-color: rgba(220, 53, 69, 0.1) !important;
+    color: var(--dark-accent-danger) !important;
+    border-color: var(--dark-accent-danger) !important;
+}
+
+.alert-info {
+    background-color: rgba(23, 162, 184, 0.1) !important;
+    color: var(--dark-accent-info) !important;
+    border-color: var(--dark-accent-info) !important;
+}
+
+/* Badges */
+.badge {
+    color: var(--dark-text-primary) !important;
+}
+
+.badge.bg-success {
+    background-color: var(--dark-accent-secondary) !important;
+}
+
+.badge.bg-warning {
+    background-color: var(--dark-accent-warning) !important;
+    color: #000 !important;
+}
+
+.badge.bg-danger {
+    background-color: var(--dark-accent-danger) !important;
+}
+
+.badge.bg-primary {
+    background-color: var(--dark-accent-primary) !important;
+}
+
+.badge.bg-info {
+    background-color: var(--dark-accent-info) !important;
+}
+
+/* Tables */
+.table {
+    color: var(--dark-text-primary) !important;
+}
+
+.table-dark {
+    background-color: var(--dark-bg-card) !important;
+}
+
+.table-striped > tbody > tr:nth-of-type(odd) > td,
+.table-striped > tbody > tr:nth-of-type(odd) > th {
+    background-color: var(--dark-bg-tertiary) !important;
+}
+
+.table-hover > tbody > tr:hover > td,
+.table-hover > tbody > tr:hover > th {
+    background-color: var(--dark-bg-hover) !important;
+}
+
+/* Modals */
+.modal-content {
+    background-color: var(--dark-bg-card) !important;
+    border: 1px solid var(--dark-border) !important;
+}
+
+.modal-header {
+    background-color: var(--dark-bg-tertiary) !important;
+    border-bottom: 1px solid var(--dark-border) !important;
+}
+
+.modal-footer {
+    background-color: var(--dark-bg-tertiary) !important;
+    border-top: 1px solid var(--dark-border) !important;
+}
+
+.modal-title {
+    color: var(--dark-text-primary) !important;
+}
+
+/* Footer */
+footer {
+    background-color: var(--dark-bg-secondary) !important;
+    border-top: 1px solid var(--dark-border) !important;
+    color: var(--dark-text-secondary) !important;
+}
+
+/* Text Colors */
+.text-primary {
+    color: var(--dark-accent-primary) !important;
+}
+
+.text-secondary {
+    color: var(--dark-text-secondary) !important;
+}
+
+.text-muted {
+    color: var(--dark-text-muted) !important;
+}
+
+.text-success {
+    color: var(--dark-accent-secondary) !important;
+}
+
+.text-warning {
+    color: var(--dark-accent-warning) !important;
+}
+
+.text-danger {
+    color: var(--dark-accent-danger) !important;
+}
+
+.text-info {
+    color: var(--dark-accent-info) !important;
+}
+
+/* Background Colors */
+.bg-primary {
+    background-color: var(--dark-accent-primary) !important;
+}
+
+.bg-secondary {
+    background-color: var(--dark-bg-secondary) !important;
+}
+
+.bg-success {
+    background-color: var(--dark-accent-secondary) !important;
+}
+
+.bg-warning {
+    background-color: var(--dark-accent-warning) !important;
+}
+
+.bg-danger {
+    background-color: var(--dark-accent-danger) !important;
+}
+
+.bg-info {
+    background-color: var(--dark-accent-info) !important;
+}
+
+.bg-dark {
+    background-color: var(--dark-bg-primary) !important;
+}
+
+/* List Groups */
+.list-group-item {
+    background-color: var(--dark-bg-card) !important;
+    border: 1px solid var(--dark-border) !important;
+    color: var(--dark-text-primary) !important;
+}
+
+.list-group-item:hover {
+    background-color: var(--dark-bg-hover) !important;
+}
+
+.list-group-item.active {
+    background-color: var(--dark-accent-primary) !important;
+    border-color: var(--dark-accent-primary) !important;
+}
+
+/* Pagination */
+.page-link {
+    background-color: var(--dark-bg-card) !important;
+    border: 1px solid var(--dark-border) !important;
+    color: var(--dark-text-primary) !important;
+}
+
+.page-link:hover {
+    background-color: var(--dark-bg-hover) !important;
+    border-color: var(--dark-border) !important;
+    color: var(--dark-text-primary) !important;
+}
+
+.page-item.active .page-link {
+    background-color: var(--dark-accent-primary) !important;
+    border-color: var(--dark-accent-primary) !important;
+}
+
+/* Progress Bars */
+.progress {
+    background-color: var(--dark-bg-tertiary) !important;
+}
+
+.progress-bar {
+    background-color: var(--dark-accent-primary) !important;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--dark-bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--dark-border);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--dark-border-light);
+}
+
+/* Hover Effects */
+.hover-lift {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hover-lift:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px var(--dark-shadow-lg) !important;
+}
+
+/* Loading Spinner */
+.spinner-border {
+    color: var(--dark-accent-primary) !important;
+}
+
+/* Custom Components */
+.time-calculation {
+    background-color: var(--dark-bg-tertiary) !important;
+    border: 1px solid var(--dark-border) !important;
+}
+
+.bike-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.bike-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px var(--dark-shadow) !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .card {
+        margin-bottom: 1rem;
+    }
+    
+    .btn {
+        font-size: 0.9rem;
+    }
+}

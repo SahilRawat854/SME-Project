@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - SpinGo</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link href="css/style.css" rel="stylesheet">
+    <link href="css/dark-theme.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <i class="fas fa-motorcycle"></i> SpinGo
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="bikes.html">Browse Bikes</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="pricing.html">Pricing</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="about.html">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="contact.html">Contact</a>
+                    </li>
+                </ul>
+                
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="login.html">
+                            <i class="fas fa-sign-in-alt"></i> Login
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="signup.html">
+                            <i class="fas fa-user-plus"></i> Sign Up
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main content area with padding for fixed navbar -->
+    <main style="margin-top: 56px;">
+        <div class="container py-5">
+            <div class="row justify-content-center">
+                <div class="col-md-6 col-lg-5">
+                    <div class="card shadow">
+                        <div class="card-header bg-primary text-white text-center">
+                            <h4 class="mb-0">
+                                <i class="fas fa-sign-in-alt"></i> Welcome Back
+                            </h4>
+                        </div>
+                        <div class="card-body p-4">
+                            <!-- Login Form -->
+                            <form id="loginForm">
+                                <!-- Email/Phone Field -->
+                                <div class="mb-3">
+                                    <label for="email" class="form-label">Email or Phone</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">
+                                            <i class="fas fa-user"></i>
+                                        </span>
+                                        <input type="text" 
+                                               class="form-control" 
+                                               id="email" 
+                                               name="email" 
+                                               placeholder="Enter your email or phone number"
+                                               required>
+                                    </div>
+                                </div>
+
+                                <!-- Password Field -->
+                                <div class="mb-3">
+                                    <label for="password" class="form-label">Password</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">
+                                            <i class="fas fa-lock"></i>
+                                        </span>
+                                        <input type="password" 
+                                               class="form-control" 
+                                               id="password" 
+                                               name="password" 
+                                               placeholder="Enter your password"
+                                               required>
+                                        <button class="btn btn-outline-secondary" type="button" id="togglePassword">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- User Role Selection - MOVED INSIDE FORM -->
+                                <div class="mb-3">
+                                    <label for="userRole" class="form-label">Login as</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">
+                                            <i class="fas fa-user-tag"></i>
+                                        </span>
+                                        <select class="form-select" id="userRole" name="userRole" required>
+                                            <option value="">Select your role</option>
+                                            <option value="CUSTOMER">Customer</option>
+                                            <option value="INDIVIDUAL_OWNER">Individual Owner</option>
+                                            <option value="RENTAL_BUSINESS">Rental Business</option>
+                                            <option value="DELIVERY_PARTNER">Delivery Partner</option>
+                                            <option value="ADMIN">Admin</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <!-- Remember Me & Forgot Password -->
+                                <div class="row mb-3">
+                                    <div class="col-6">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="remember" name="remember">
+                                            <label class="form-check-label" for="remember">
+                                                Remember me
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-6 text-end">
+                                        <a href="forgot-password.html" class="text-decoration-none">
+                                            Forgot Password?
+                                        </a>
+                                    </div>
+                                </div>
+
+                                <!-- Login Button -->
+                                <div class="d-grid mb-3">
+                                    <button type="submit" class="btn btn-primary btn-lg" id="loginBtn">
+                                        <i class="fas fa-sign-in-alt"></i> Sign In
+                                    </button>
+                                </div>
+
+                                <!-- Error Messages -->
+                                <div id="errorMessage" class="alert alert-danger d-none" role="alert">
+                                    <i class="fas fa-exclamation-circle"></i>
+                                    <span id="errorText"></span>
+                                </div>
+
+                                <div id="successMessage" class="alert alert-success d-none" role="alert">
+                                    <i class="fas fa-check-circle"></i>
+                                    <span id="successText"></span>
+                                </div>
+                            </form>
+
+                            <!-- Sign Up Link -->
+                            <div class="text-center">
+                                <p class="mb-0">
+                                    Don't have an account? 
+                                    <a href="signup.html" class="text-decoration-none fw-bold">
+                                        Sign up here
+                                    </a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Additional Info -->
+                    <div class="text-center mt-4">
+                        <p class="text-muted">
+                            <i class="fas fa-shield-alt"></i>
+                            Your information is secure and protected
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h5><i class="fas fa-motorcycle"></i> SpinGo</h5>
+                    <p>Your trusted partner for premium bike rental services.</p>
+                </div>
+                <div class="col-md-8 text-md-end">
+                    <p class="mb-0">&copy; 2024 SpinGo. All rights reserved.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Updated Login Script -->
+    <script>
+        // Password toggle functionality
+        document.getElementById('togglePassword').addEventListener('click', function() {
+            const password = document.getElementById('password');
+            const icon = this.querySelector('i');
+            
+            if (password.type === 'password') {
+                password.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                password.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        });
+
+        // Form submission handling
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const loginBtn = document.getElementById('loginBtn');
+            const errorMessage = document.getElementById('errorMessage');
+            const successMessage = document.getElementById('successMessage');
+            const errorText = document.getElementById('errorText');
+            const successText = document.getElementById('successText');
+            
+            // Hide previous messages
+            errorMessage.classList.add('d-none');
+            successMessage.classList.add('d-none');
+            
+            // Show loading state
+            loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Signing in...';
+            loginBtn.disabled = true;
+            
+            // Get form data
+            const formData = new FormData(this);
+            const loginData = {
+                email: formData.get('email'),
+                password: formData.get('password'),
+                role: formData.get('userRole')
+            };
+            
+            // Validate role selection
+            if (!loginData.role) {
+                errorText.textContent = 'Please select your role';
+                errorMessage.classList.remove('d-none');
+                loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Sign In';
+                loginBtn.disabled = false;
+                return;
+            }
+            
+            try {
+                console.log('Attempting login with data:', loginData);
+                
+                // First try to check if backend is available
+                let backendAvailable = false;
+                try {
+                    const healthResponse = await fetch('http://localhost:8080/api/auth/health', {
+                        method: 'GET',
+                        timeout: 3000
+                    });
+                    backendAvailable = healthResponse.ok;
+                } catch (e) {
+                    console.log('Backend not available, using mock authentication');
+                    backendAvailable = false;
+                }
+                
+                if (backendAvailable) {
+                    // Make API call to your backend
+                    const response = await fetch('http://localhost:8080/api/auth/login', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(loginData)
+                    });
+                    
+                    console.log('Response status:', response.status);
+                    const result = await response.json();
+                    console.log('Response data:', result);
+                
+                if (response.ok) {
+                        // Success - store token and user info
+                        localStorage.setItem('token', result.token);
+                        localStorage.setItem('user', JSON.stringify({
+                            id: result.id,
+                            name: result.name,
+                            email: result.email,
+                            role: result.role
+                        }));
+                        localStorage.setItem('spinGoUser', JSON.stringify({
+                            id: result.id,
+                            name: result.name,
+                            email: result.email,
+                            role: result.role
+                        }));
+                    
+                    successText.textContent = 'Login successful! Redirecting...';
+                    successMessage.classList.remove('d-none');
+                    
+                    // Redirect based on role
+                    setTimeout(() => {
+                        switch(result.role) {
+                            case 'ADMIN':
+                                window.location.href = 'admin-dashboard.html';
+                                break;
+                            case 'RENTAL_BUSINESS':
+                                window.location.href = 'business-dashboard.html';
+                                break;
+                            case 'INDIVIDUAL_OWNER':
+                                window.location.href = 'owner-dashboard.html';
+                                break;
+                            case 'DELIVERY_PARTNER':
+                                window.location.href = 'delivery-dashboard.html';
+                                break;
+                            case 'CUSTOMER':
+                            default:
+                                window.location.href = 'dashboard.html';
+                                break;
+                        }
+                    }, 1500);
+                    
+                } else {
+                    // Error response
+                    errorText.textContent = result.error || result.message || 'Login failed. Please check your credentials.';
+                    errorMessage.classList.remove('d-none');
+                }
+                } else {
+                    // Backend not available, use mock authentication
+                    console.log('Using mock authentication');
+                    const mockResult = handleMockLogin(loginData);
+                    if (mockResult.success) {
+                        // Success - store mock token and user info
+                        localStorage.setItem('token', mockResult.token);
+                        localStorage.setItem('user', JSON.stringify(mockResult.user));
+                        localStorage.setItem('spinGoUser', JSON.stringify(mockResult.user));
+                        
+                        successText.textContent = 'Login successful! Redirecting...';
+                        successMessage.classList.remove('d-none');
+                        
+                        // Redirect based on role
+                        setTimeout(() => {
+                            switch(mockResult.user.role) {
+                                case 'ADMIN':
+                                    window.location.href = 'admin-dashboard.html';
+                                    break;
+                                case 'RENTAL_BUSINESS':
+                                    window.location.href = 'rental-business-dashboard.html';
+                                    break;
+                                case 'INDIVIDUAL_OWNER':
+                                    window.location.href = 'individual-owner-dashboard.html';
+                                    break;
+                                case 'DELIVERY_PARTNER':
+                                    window.location.href = 'delivery-dashboard.html';
+                                    break;
+                                case 'CUSTOMER':
+                                default:
+                                    window.location.href = 'dashboard.html';
+                                    break;
+                            }
+                        }, 1500);
+                    } else {
+                        errorText.textContent = mockResult.message || 'Invalid credentials. Please try again.';
+                        errorMessage.classList.remove('d-none');
+                    }
+                }
+                
+            } catch (error) {
+                console.error('Login error:', error);
+                errorText.textContent = 'Network error. Please try again.';
+                errorMessage.classList.remove('d-none');
+            }
+            
+            // Reset button
+            loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Sign In';
+            loginBtn.disabled = false;
+        });
+
+        // Check if user is already logged in
+        window.addEventListener('DOMContentLoaded', function() {
+            const token = localStorage.getItem('token');
+            const user = localStorage.getItem('user');
+            
+            if (token && user) {
+                const userData = JSON.parse(user);
+                // Redirect to appropriate dashboard
+                switch(userData.role) {
+                    case 'ADMIN':
+                        window.location.href = 'admin-dashboard.html';
+                        break;
+                    case 'RENTAL_BUSINESS':
+                        window.location.href = 'business-dashboard.html';
+                        break;
+                    case 'INDIVIDUAL_OWNER':
+                        window.location.href = 'owner-dashboard.html';
+                        break;
+                    case 'DELIVERY_PARTNER':
+                        window.location.href = 'delivery-dashboard.html';
+                        break;
+                    case 'CUSTOMER':
+                    default:
+                        window.location.href = 'dashboard.html';
+                        break;
+                }
+            }
+        });
+
+        // Mock authentication function
+        function handleMockLogin(loginData) {
+            const mockUsers = {
+                'admin@spingo.com': { role: 'ADMIN', name: 'Admin User', password: 'admin123' },
+                'john@example.com': { role: 'CUSTOMER', name: 'John Doe', password: 'password123' },
+                'jane@example.com': { role: 'CUSTOMER', name: 'Jane Smith', password: 'password123' },
+                'alice@example.com': { role: 'CUSTOMER', name: 'Alice Johnson', password: 'password123' },
+                'mike@example.com': { role: 'INDIVIDUAL_OWNER', name: 'Mike Johnson', password: 'password123' },
+                'sarah@example.com': { role: 'RENTAL_BUSINESS', name: 'Sarah Wilson', password: 'password123' },
+                'tom@example.com': { role: 'DELIVERY_PARTNER', name: 'Tom Brown', password: 'password123' }
+            };
+
+            const user = mockUsers[loginData.email];
+            
+            if (user && user.password === loginData.password && user.role === loginData.role) {
+                return {
+                    success: true,
+                    token: 'mock_token_' + Date.now(),
+                    user: {
+                        id: 1,
+                        email: loginData.email,
+                        name: user.name,
+                        role: user.role
+                    }
+                };
+            } else {
+                return {
+                    success: false,
+                    message: 'Invalid credentials. Please check your email, password, and role.'
+                };
+            }
+        }
+    </script>
+    
+    <!-- Include your existing scripts if needed -->
+    <script src="js/auth-manager.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

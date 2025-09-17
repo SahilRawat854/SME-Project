@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Individual Owner Dashboard - SpinGo</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Custom CSS -->
+    <link href="css/style.css" rel="stylesheet">
+    <link href="css/dark-theme.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <i class="fas fa-user-circle"></i> SpinGo Owner
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="individual-owner-dashboard.html">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="owner-bikes.html">My Bikes</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="owner-bookings.html">Bookings</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="owner-earnings.html">Earnings</a>
+                    </li>
+                </ul>
+                
+                <ul class="navbar-nav">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-user"></i> <span id="ownerName">Bike Owner</span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="owner-profile.html"><i class="fas fa-user-edit"></i> Profile</a></li>
+                            <li><a class="dropdown-item" href="owner-settings.html"><i class="fas fa-cog"></i> Settings</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main content area with padding for fixed navbar -->
+    <main style="margin-top: 56px;">
+        <div class="container-fluid py-4">
+            <!-- Welcome Section -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row align-items-center">
+                                <div class="col-md-8">
+                                    <h2 class="mb-1 text-white">Welcome back, <span id="welcomeName">Bike Owner</span>!</h2>
+                                    <p class="text-muted mb-0">Manage your bikes and track your rental earnings</p>
+                                </div>
+                                <div class="col-md-4 text-md-end">
+                                    <div class="d-flex gap-2 justify-content-md-end">
+                                        <button class="btn btn-outline-primary" onclick="window.location.href='owner-bikes.html'">
+                                            <i class="fas fa-plus"></i> Add Bike
+                                        </button>
+                                        <button class="btn btn-primary" onclick="window.location.href='owner-earnings.html'">
+                                            <i class="fas fa-rupee-sign"></i> View Earnings
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Owner Stats -->
+            <div class="row g-4 mb-4">
+                <div class="col-lg-3 col-md-6">
+                    <div class="card stats-card">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center">
+                                <div class="flex-shrink-0">
+                                    <div class="stats-icon bg-primary">
+                                        <i class="fas fa-motorcycle"></i>
+                                    </div>
+                                </div>
+                                <div class="flex-grow-1 ms-3">
+                                    <h6 class="text-muted mb-1">My Bikes</h6>
+                                    <h3 class="mb-0 text-white" id="myBikes">3</h3>
+                                    <small class="text-success">All active</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="card stats-card">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center">
+                                <div class="flex-shrink-0">
+                                    <div class="stats-icon bg-success">
+                                        <i class="fas fa-calendar-check"></i>
+                                    </div>
+                                </div>
+                                <div class="flex-grow-1 ms-3">
+                                    <h6 class="text-muted mb-1">Active Rentals</h6>
+                                    <h3 class="mb-0 text-white" id="activeRentals">2</h3>
+                                    <small class="text-info">Currently rented</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="card stats-card">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center">
+                                <div class="flex-shrink-0">
+                                    <div class="stats-icon bg-warning">
+                                        <i class="fas fa-rupee-sign"></i>
+                                    </div>
+                                </div>
+                                <div class="flex-grow-1 ms-3">
+                                    <h6 class="text-muted mb-1">Monthly Earnings</h6>
+                                    <h3 class="mb-0 text-white" id="monthlyEarnings">₹18,500</h3>
+                                    <small class="text-success">+8% from last month</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="card stats-card">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center">
+                                <div class="flex-shrink-0">
+                                    <div class="stats-icon bg-info">
+                                        <i class="fas fa-star"></i>
+                                    </div>
+                                </div>
+                                <div class="flex-grow-1 ms-3">
+                                    <h6 class="text-muted mb-1">Average Rating</h6>
+                                    <h3 class="mb-0 text-white" id="averageRating">4.6</h3>
+                                    <small class="text-primary">Excellent</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts and Bike Status -->
+            <div class="row g-4">
+                <!-- Earnings Chart -->
+                <div class="col-lg-8">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0 text-white"><i class="fas fa-chart-line"></i> Earnings Overview</h5>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="earningsChart" height="100"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bike Status -->
+                <div class="col-lg-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0 text-white"><i class="fas fa-bicycle"></i> Bike Status</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="list-group list-group-flush" id="bikeStatus">
+                                <!-- Bike status will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Bookings and Performance -->
+            <div class="row g-4 mt-4">
+                <!-- Recent Bookings -->
+                <div class="col-lg-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0 text-white"><i class="fas fa-clock"></i> Recent Bookings</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="list-group list-group-flush" id="recentBookings">
+                                <!-- Recent bookings will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Performance Summary -->
+                <div class="col-lg-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0 text-white"><i class="fas fa-chart-bar"></i> Performance Summary</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row g-3">
+                                <div class="col-6">
+                                    <div class="text-center">
+                                        <h4 class="text-primary mb-1">78%</h4>
+                                        <small class="text-muted">Utilization Rate</small>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="text-center">
+                                        <h4 class="text-success mb-1">₹6,167</h4>
+                                        <small class="text-muted">Avg. Earnings/Bike</small>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="text-center">
+                                        <h4 class="text-warning mb-1">24</h4>
+                                        <small class="text-muted">Total Bookings</small>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="text-center">
+                                        <h4 class="text-info mb-1">96%</h4>
+                                        <small class="text-muted">On-time Returns</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h5><i class="fas fa-user-circle"></i> SpinGo Owner</h5>
+                    <p>Individual owner dashboard for SpinGo bike rental system.</p>
+                </div>
+                <div class="col-md-8 text-md-end">
+                    <p class="mb-0">&copy; 2024 SpinGo. All rights reserved.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/individual-owner-dashboard.js"></script>
+</body>
+</html>

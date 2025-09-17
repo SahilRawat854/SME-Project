@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Browse Bikes - SpinGo</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link href="css/style.css" rel="stylesheet">
+    <link href="css/dark-theme.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <i class="fas fa-motorcycle"></i> SpinGo
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="bikes.html">Browse Bikes</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="pricing.html">Pricing</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="about.html">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="contact.html">Contact</a>
+                    </li>
+                </ul>
+                
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="login.html">
+                            <i class="fas fa-sign-in-alt"></i> Login
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="register.html">
+                            <i class="fas fa-user-plus"></i> Sign Up
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main content area with padding for fixed navbar -->
+    <main style="margin-top: 56px;">
+        <div class="container py-5">
+            <div class="row">
+                <div class="col-lg-8 mx-auto text-center mb-5">
+                    <h1 class="display-4 fw-bold mb-4">Browse & Find Bikes</h1>
+                    <p class="lead text-muted">
+                        Choose from our premium selection of bikes. All bikes are regularly maintained and come with comprehensive insurance.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Browse/Filter Toggle -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-center gap-3">
+                                <button class="btn btn-outline-primary" id="browseModeBtn" onclick="bikesManager.toggleMode('browse')">
+                                    <i class="fas fa-th-large"></i> Browse All Bikes
+                                </button>
+                                <!-- <button class="btn btn-primary" id="filterModeBtn" onclick="bikesManager.toggleMode('filter')">
+                                    <i class="fas fa-search"></i> Find Specific Bikes
+                                </button> -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filter Section -->
+            <div class="row mb-4" id="filterSection">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row g-3">
+                                <div class="col-md-3">
+                                    <label for="cityFilter" class="form-label">City</label>
+                                    <select class="form-select" id="cityFilter">
+                                        <option value="">All Cities</option>
+                                        <option value="Mumbai">Mumbai</option>
+                                        <option value="Delhi">Delhi</option>
+                                        <option value="Bangalore">Bangalore</option>
+                                        <option value="Chennai">Chennai</option>
+                                        <option value="Kolkata">Kolkata</option>
+                                        <option value="Hyderabad">Hyderabad</option>
+                                        <option value="Pune">Pune</option>
+                                        <option value="Ahmedabad">Ahmedabad</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="pickupDate" class="form-label">Pick Up Date</label>
+                                    <input type="date" class="form-control" id="pickupDate" min="">
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="pickTime" class="form-label">Pick Time</label>
+                                    <select class="form-select" id="pickTime">
+                                        <option value="">Select Hour</option>
+                                        <option value="00:00">12:00 AM</option>
+                                        <option value="01:00">01:00 AM</option>
+                                        <option value="02:00">02:00 AM</option>
+                                        <option value="03:00">03:00 AM</option>
+                                        <option value="04:00">04:00 AM</option>
+                                        <option value="05:00">05:00 AM</option>
+                                        <option value="06:00">06:00 AM</option>
+                                        <option value="07:00">07:00 AM</option>
+                                        <option value="08:00">08:00 AM</option>
+                                        <option value="09:00">09:00 AM</option>
+                                        <option value="10:00">10:00 AM</option>
+                                        <option value="11:00">11:00 AM</option>
+                                        <option value="12:00">12:00 PM</option>
+                                        <option value="13:00">01:00 PM</option>
+                                        <option value="14:00">02:00 PM</option>
+                                        <option value="15:00">03:00 PM</option>
+                                        <option value="16:00">04:00 PM</option>
+                                        <option value="17:00">05:00 PM</option>
+                                        <option value="18:00">06:00 PM</option>
+                                        <option value="19:00">07:00 PM</option>
+                                        <option value="20:00">08:00 PM</option>
+                                        <option value="21:00">09:00 PM</option>
+                                        <option value="22:00">10:00 PM</option>
+                                        <option value="23:00">11:00 PM</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="dropOffDate" class="form-label">Drop Off Date</label>
+                                    <input type="date" class="form-control" id="dropOffDate" min="">
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="dropTime" class="form-label">Drop Time</label>
+                                    <select class="form-select" id="dropTime">
+                                        <option value="">Select Hour</option>
+                                        <option value="00:00">12:00 AM</option>
+                                        <option value="01:00">01:00 AM</option>
+                                        <option value="02:00">02:00 AM</option>
+                                        <option value="03:00">03:00 AM</option>
+                                        <option value="04:00">04:00 AM</option>
+                                        <option value="05:00">05:00 AM</option>
+                                        <option value="06:00">06:00 AM</option>
+                                        <option value="07:00">07:00 AM</option>
+                                        <option value="08:00">08:00 AM</option>
+                                        <option value="09:00">09:00 AM</option>
+                                        <option value="10:00">10:00 AM</option>
+                                        <option value="11:00">11:00 AM</option>
+                                        <option value="12:00">12:00 PM</option>
+                                        <option value="13:00">01:00 PM</option>
+                                        <option value="14:00">02:00 PM</option>
+                                        <option value="15:00">03:00 PM</option>
+                                        <option value="16:00">04:00 PM</option>
+                                        <option value="17:00">05:00 PM</option>
+                                        <option value="18:00">06:00 PM</option>
+                                        <option value="19:00">07:00 PM</option>
+                                        <option value="20:00">08:00 PM</option>
+                                        <option value="21:00">09:00 PM</option>
+                                        <option value="22:00">10:00 PM</option>
+                                        <option value="23:00">11:00 PM</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label">&nbsp;</label>
+                                    <div class="d-grid">
+                                        <button class="btn btn-primary" onclick="filterBikes()">
+                                            <i class="fas fa-search"></i> Find Bikes
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Time Calculation Display -->
+                            <div class="row mt-3" id="timeCalculation" style="display: none;">
+                                <div class="col-12">
+                                    <div class="alert alert-info">
+                                        <div class="row align-items-center">
+                                            <div class="col-md-8">
+                                                <h6 class="mb-1"><i class="fas fa-clock me-2"></i>Booking Duration</h6>
+                                                <p class="mb-0" id="calculatedTime">Total rental time will be calculated here</p>
+                                            </div>
+                                            <div class="col-md-4 text-end">
+                                                <span class="badge bg-primary fs-6" id="durationBadge">0 hours</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bikes Grid -->
+            <div class="row g-4" id="bikesGrid">
+                <!-- Bikes will be loaded dynamically -->
+            </div>
+
+            <!-- Loading Spinner -->
+            <div class="text-center mt-5" id="loadingSpinner" style="display: none;">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <p class="mt-2">Loading bikes...</p>
+            </div>
+
+            <!-- No Results Message -->
+            <div class="text-center mt-5" id="noResults" style="display: none;">
+                <i class="fas fa-search fa-3x text-muted mb-3"></i>
+                <h4>No bikes found</h4>
+                <p class="text-muted">Try adjusting your filters or check back later.</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h5><i class="fas fa-motorcycle"></i> SpinGo</h5>
+                    <p>Your trusted partner for premium bike rental services.</p>
+                </div>
+                <div class="col-md-8 text-md-end">
+                    <p class="mb-0">&copy; 2024 SpinGo. All rights reserved.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/auth-manager.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/bikes.js"></script>
+</body>
+</html>

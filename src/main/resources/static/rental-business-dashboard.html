@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rental Business Dashboard - SpinGo</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Custom CSS -->
+    <link href="css/style.css" rel="stylesheet">
+    <link href="css/dark-theme.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <i class="fas fa-building"></i> SpinGo Business
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="rental-business-dashboard.html">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="business-fleet.html">Fleet Management</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="business-bookings.html">Bookings</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="business-finance.html">Finance</a>
+                    </li>
+                </ul>
+                
+                <ul class="navbar-nav">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-user-tie"></i> <span id="businessName">Business Owner</span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="business-profile.html"><i class="fas fa-user-edit"></i> Profile</a></li>
+                            <li><a class="dropdown-item" href="business-settings.html"><i class="fas fa-cog"></i> Settings</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main content area with padding for fixed navbar -->
+    <main style="margin-top: 56px;">
+        <div class="container-fluid py-4">
+            <!-- Welcome Section -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row align-items-center">
+                                <div class="col-md-8">
+                                    <h2 class="mb-1 text-white">Business Dashboard</h2>
+                                    <p class="text-muted mb-0">Monitor your rental business performance and operations</p>
+                                </div>
+                                <div class="col-md-4 text-md-end">
+                                    <div class="d-flex gap-2 justify-content-md-end">
+                                        <button class="btn btn-outline-primary" onclick="window.location.href='business-fleet.html'">
+                                            <i class="fas fa-plus"></i> Add Vehicle
+                                        </button>
+                                        <button class="btn btn-primary" onclick="window.location.href='business-finance.html'">
+                                            <i class="fas fa-chart-line"></i> View Reports
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Business Metrics -->
+            <div class="row g-4 mb-4">
+                <div class="col-lg-3 col-md-6">
+                    <div class="card stats-card">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center">
+                                <div class="flex-shrink-0">
+                                    <div class="stats-icon bg-primary">
+                                        <i class="fas fa-motorcycle"></i>
+                                    </div>
+                                </div>
+                                <div class="flex-grow-1 ms-3">
+                                    <h6 class="text-muted mb-1">Total Fleet</h6>
+                                    <h3 class="mb-0 text-white" id="totalFleet">45</h3>
+                                    <small class="text-success">+3 this month</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="card stats-card">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center">
+                                <div class="flex-shrink-0">
+                                    <div class="stats-icon bg-success">
+                                        <i class="fas fa-calendar-check"></i>
+                                    </div>
+                                </div>
+                                <div class="flex-grow-1 ms-3">
+                                    <h6 class="text-muted mb-1">Active Bookings</h6>
+                                    <h3 class="mb-0 text-white" id="activeBookings">28</h3>
+                                    <small class="text-info">Currently rented</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="card stats-card">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center">
+                                <div class="flex-shrink-0">
+                                    <div class="stats-icon bg-warning">
+                                        <i class="fas fa-rupee-sign"></i>
+                                    </div>
+                                </div>
+                                <div class="flex-grow-1 ms-3">
+                                    <h6 class="text-muted mb-1">Monthly Revenue</h6>
+                                    <h3 class="mb-0 text-white" id="monthlyRevenue">₹2,45,000</h3>
+                                    <small class="text-success">+12% from last month</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="card stats-card">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center">
+                                <div class="flex-shrink-0">
+                                    <div class="stats-icon bg-info">
+                                        <i class="fas fa-users"></i>
+                                    </div>
+                                </div>
+                                <div class="flex-grow-1 ms-3">
+                                    <h6 class="text-muted mb-1">Active Customers</h6>
+                                    <h3 class="mb-0 text-white" id="activeCustomers">156</h3>
+                                    <small class="text-primary">Regular users</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts and Fleet Status -->
+            <div class="row g-4">
+                <!-- Revenue Chart -->
+                <div class="col-lg-8">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0 text-white"><i class="fas fa-chart-line"></i> Revenue Trend</h5>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="revenueChart" height="100"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Fleet Status -->
+                <div class="col-lg-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0 text-white"><i class="fas fa-chart-pie"></i> Fleet Status</h5>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="fleetStatusChart" height="200"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Bookings and Performance -->
+            <div class="row g-4 mt-4">
+                <!-- Recent Bookings -->
+                <div class="col-lg-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0 text-white"><i class="fas fa-clock"></i> Recent Bookings</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="list-group list-group-flush" id="recentBookings">
+                                <!-- Recent bookings will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Performance Metrics -->
+                <div class="col-lg-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0 text-white"><i class="fas fa-trophy"></i> Performance Metrics</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row g-3">
+                                <div class="col-6">
+                                    <div class="text-center">
+                                        <h4 class="text-primary mb-1">85%</h4>
+                                        <small class="text-muted">Fleet Utilization</small>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="text-center">
+                                        <h4 class="text-success mb-1">4.7</h4>
+                                        <small class="text-muted">Customer Rating</small>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="text-center">
+                                        <h4 class="text-warning mb-1">₹1,850</h4>
+                                        <small class="text-muted">Avg. Revenue/Bike</small>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="text-center">
+                                        <h4 class="text-info mb-1">92%</h4>
+                                        <small class="text-muted">On-time Returns</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h5><i class="fas fa-building"></i> SpinGo Business</h5>
+                    <p>Business dashboard for SpinGo bike rental system.</p>
+                </div>
+                <div class="col-md-8 text-md-end">
+                    <p class="mb-0">&copy; 2024 SpinGo. All rights reserved.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/rental-business-dashboard.js"></script>
+</body>
+</html>
