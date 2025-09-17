@@ -201,6 +201,286 @@ class BikeDetailsPage {
                         date: '2024-01-07'
                     }
                 ]
+            },
+            '4': {
+                id: 4,
+                brand: 'Honda',
+                model: 'Shadow',
+                year: 2021,
+                pricePerHour: 300,
+                pricePerDay: 1800,
+                pricePerMonth: 36000,
+                description: 'The Honda Shadow is a classic cruiser motorcycle that offers a comfortable riding experience with its relaxed riding position and smooth engine. Perfect for long rides and city cruising.',
+                status: 'AVAILABLE',
+                imageUrl: 'images/honda-shadow.jpg',
+                specifications: {
+                    engine: '745cc V-Twin',
+                    power: '45 HP @ 5,500 RPM',
+                    torque: '60 Nm @ 3,000 RPM',
+                    transmission: '5-Speed Manual',
+                    fuelCapacity: '11.2 L',
+                    weight: '245 kg',
+                    seatHeight: '700 mm',
+                    topSpeed: '160 km/h',
+                    acceleration: '0-100 km/h in 6.5s'
+                },
+                features: [
+                    { icon: 'fas fa-chair', title: 'Comfortable Seat', description: 'Wide, comfortable seating' },
+                    { icon: 'fas fa-shield-alt', title: 'ABS', description: 'Anti-lock braking system' },
+                    { icon: 'fas fa-wind', title: 'Wind Protection', description: 'Windshield included' },
+                    { icon: 'fas fa-cog', title: 'Reliable Engine', description: 'Proven Honda reliability' }
+                ],
+                rating: 4.5,
+                totalReviews: 89,
+                reviews: [
+                    {
+                        id: 1,
+                        user: 'Amit Singh',
+                        rating: 5,
+                        comment: 'Perfect cruiser for long rides. Very comfortable and reliable.',
+                        date: '2024-01-12'
+                    }
+                ]
+            },
+            '7': {
+                id: 7,
+                brand: 'Ducati',
+                model: 'Monster 821',
+                year: 2023,
+                pricePerHour: 800,
+                pricePerDay: 4800,
+                pricePerMonth: 96000,
+                description: 'The Ducati Monster 821 is a naked sport bike that combines Italian style with exceptional performance. With its powerful engine and agile handling, it offers an exciting riding experience.',
+                status: 'AVAILABLE',
+                imageUrl: 'images/ducati-monster-821.jpg',
+                specifications: {
+                    engine: '821cc L-Twin',
+                    power: '109 HP @ 9,250 RPM',
+                    torque: '86 Nm @ 7,750 RPM',
+                    transmission: '6-Speed Manual',
+                    fuelCapacity: '16.5 L',
+                    weight: '206 kg',
+                    seatHeight: '810 mm',
+                    topSpeed: '220 km/h',
+                    acceleration: '0-100 km/h in 3.8s'
+                },
+                features: [
+                    { icon: 'fas fa-bolt', title: 'Quick Shifter', description: 'Seamless gear changes' },
+                    { icon: 'fas fa-cog', title: 'Ride Modes', description: 'Multiple riding modes' },
+                    { icon: 'fas fa-shield-alt', title: 'ABS', description: 'Anti-lock braking system' },
+                    { icon: 'fas fa-tachometer-alt', title: 'Digital Display', description: 'Advanced instrument cluster' }
+                ],
+                rating: 4.7,
+                totalReviews: 156,
+                reviews: [
+                    {
+                        id: 1,
+                        user: 'Vikram Patel',
+                        rating: 5,
+                        comment: 'Amazing Italian engineering! The sound and performance are incredible.',
+                        date: '2024-01-14'
+                    }
+                ]
+            },
+            '8': {
+                id: 8,
+                brand: 'BMW',
+                model: 'G 310 R',
+                year: 2023,
+                pricePerHour: 400,
+                pricePerDay: 2400,
+                pricePerMonth: 48000,
+                description: 'The BMW G 310 R is a premium entry-level naked bike that offers BMW quality and engineering in an accessible package. Perfect for city riding and weekend adventures.',
+                status: 'AVAILABLE',
+                imageUrl: 'images/bmw-g310r.jpg',
+                specifications: {
+                    engine: '313cc Single Cylinder',
+                    power: '34 HP @ 9,500 RPM',
+                    torque: '28 Nm @ 7,500 RPM',
+                    transmission: '6-Speed Manual',
+                    fuelCapacity: '11 L',
+                    weight: '158 kg',
+                    seatHeight: '785 mm',
+                    topSpeed: '143 km/h',
+                    acceleration: '0-100 km/h in 5.2s'
+                },
+                features: [
+                    { icon: 'fas fa-shield-alt', title: 'ABS', description: 'Anti-lock braking system' },
+                    { icon: 'fas fa-tachometer-alt', title: 'Digital Display', description: 'Modern instrument cluster' },
+                    { icon: 'fas fa-lightbulb', title: 'LED Lighting', description: 'LED headlights and taillights' },
+                    { icon: 'fas fa-cog', title: 'BMW Quality', description: 'Premium build quality' }
+                ],
+                rating: 4.4,
+                totalReviews: 98,
+                reviews: [
+                    {
+                        id: 1,
+                        user: 'Sneha Reddy',
+                        rating: 4,
+                        comment: 'Great bike for beginners. BMW quality at an affordable price.',
+                        date: '2024-01-13'
+                    }
+                ]
+            },
+            '9': {
+                id: 9,
+                brand: 'KTM',
+                model: 'Duke 390',
+                year: 2023,
+                pricePerHour: 450,
+                pricePerDay: 2700,
+                pricePerMonth: 54000,
+                description: 'The KTM Duke 390 is a lightweight, agile naked bike that offers exceptional performance and handling. Known for its sharp design and powerful engine, it provides an exciting riding experience.',
+                status: 'AVAILABLE',
+                imageUrl: 'images/ktm-duke-390.jpg',
+                specifications: {
+                    engine: '373cc Single Cylinder',
+                    power: '44 HP @ 9,000 RPM',
+                    torque: '37 Nm @ 7,000 RPM',
+                    transmission: '6-Speed Manual',
+                    fuelCapacity: '13.4 L',
+                    weight: '149 kg',
+                    seatHeight: '820 mm',
+                    topSpeed: '170 km/h',
+                    acceleration: '0-100 km/h in 4.8s'
+                },
+                features: [
+                    { icon: 'fas fa-bolt', title: 'Quick Shifter', description: 'Seamless gear changes' },
+                    { icon: 'fas fa-cog', title: 'Ride Modes', description: 'Multiple riding modes' },
+                    { icon: 'fas fa-shield-alt', title: 'ABS', description: 'Anti-lock braking system' },
+                    { icon: 'fas fa-tachometer-alt', title: 'Digital Display', description: 'Advanced instrument cluster' }
+                ],
+                rating: 4.6,
+                totalReviews: 134,
+                reviews: [
+                    {
+                        id: 1,
+                        user: 'Arjun Mehta',
+                        rating: 5,
+                        comment: 'Incredible performance for its size. Perfect for city and highway riding.',
+                        date: '2024-01-16'
+                    }
+                ]
+            },
+            '10': {
+                id: 10,
+                brand: 'Royal Enfield',
+                model: 'Classic 350',
+                year: 2023,
+                pricePerHour: 250,
+                pricePerDay: 1500,
+                pricePerMonth: 30000,
+                description: 'The Royal Enfield Classic 350 is a timeless motorcycle that combines classic design with modern reliability. Perfect for those who appreciate traditional styling and comfortable riding.',
+                status: 'AVAILABLE',
+                imageUrl: 'images/royal-enfield-classic-350.jpg',
+                specifications: {
+                    engine: '349cc Single Cylinder',
+                    power: '20 HP @ 6,100 RPM',
+                    torque: '27 Nm @ 4,000 RPM',
+                    transmission: '5-Speed Manual',
+                    fuelCapacity: '13 L',
+                    weight: '195 kg',
+                    seatHeight: '805 mm',
+                    topSpeed: '120 km/h',
+                    acceleration: '0-100 km/h in 8.5s'
+                },
+                features: [
+                    { icon: 'fas fa-chair', title: 'Comfortable Seat', description: 'Wide, comfortable seating' },
+                    { icon: 'fas fa-shield-alt', title: 'ABS', description: 'Anti-lock braking system' },
+                    { icon: 'fas fa-cog', title: 'Reliable Engine', description: 'Proven Royal Enfield reliability' },
+                    { icon: 'fas fa-palette', title: 'Classic Design', description: 'Timeless styling' }
+                ],
+                rating: 4.3,
+                totalReviews: 167,
+                reviews: [
+                    {
+                        id: 1,
+                        user: 'Ravi Kumar',
+                        rating: 4,
+                        comment: 'Classic looks with modern reliability. Perfect for long rides.',
+                        date: '2024-01-09'
+                    }
+                ]
+            },
+            '11': {
+                id: 11,
+                brand: 'Harley-Davidson',
+                model: 'Street 750',
+                year: 2023,
+                pricePerHour: 600,
+                pricePerDay: 3600,
+                pricePerMonth: 72000,
+                description: 'The Harley-Davidson Street 750 is an entry-level cruiser that brings the iconic Harley-Davidson experience to a wider audience. With its distinctive styling and comfortable riding position, it offers the classic American motorcycle experience.',
+                status: 'AVAILABLE',
+                imageUrl: 'images/harley-street-750.jpg',
+                specifications: {
+                    engine: '749cc V-Twin',
+                    power: '47 HP @ 8,000 RPM',
+                    torque: '59 Nm @ 4,000 RPM',
+                    transmission: '6-Speed Manual',
+                    fuelCapacity: '13.1 L',
+                    weight: '233 kg',
+                    seatHeight: '709 mm',
+                    topSpeed: '160 km/h',
+                    acceleration: '0-100 km/h in 6.2s'
+                },
+                features: [
+                    { icon: 'fas fa-chair', title: 'Comfortable Seat', description: 'Low, comfortable seating' },
+                    { icon: 'fas fa-shield-alt', title: 'ABS', description: 'Anti-lock braking system' },
+                    { icon: 'fas fa-cog', title: 'Harley Heritage', description: 'Iconic American motorcycle' },
+                    { icon: 'fas fa-palette', title: 'Classic Styling', description: 'Traditional cruiser design' }
+                ],
+                rating: 4.5,
+                totalReviews: 112,
+                reviews: [
+                    {
+                        id: 1,
+                        user: 'Mike Johnson',
+                        rating: 5,
+                        comment: 'True Harley experience! The sound and feel are amazing.',
+                        date: '2024-01-08'
+                    }
+                ]
+            },
+            '12': {
+                id: 12,
+                brand: 'Aprilia',
+                model: 'RS 660',
+                year: 2023,
+                pricePerHour: 700,
+                pricePerDay: 4200,
+                pricePerMonth: 84000,
+                description: 'The Aprilia RS 660 is a mid-displacement sport bike that combines track-ready performance with everyday usability. With its advanced electronics and lightweight design, it offers an exceptional riding experience.',
+                status: 'AVAILABLE',
+                imageUrl: 'images/aprilia-rs-660.jpg',
+                specifications: {
+                    engine: '659cc Parallel-Twin',
+                    power: '100 HP @ 10,500 RPM',
+                    torque: '67 Nm @ 8,500 RPM',
+                    transmission: '6-Speed Manual',
+                    fuelCapacity: '15 L',
+                    weight: '183 kg',
+                    seatHeight: '820 mm',
+                    topSpeed: '200 km/h',
+                    acceleration: '0-100 km/h in 3.5s'
+                },
+                features: [
+                    { icon: 'fas fa-bolt', title: 'Quick Shifter', description: 'Seamless gear changes' },
+                    { icon: 'fas fa-cog', title: 'Ride Modes', description: 'Multiple riding modes' },
+                    { icon: 'fas fa-shield-alt', title: 'ABS', description: 'Anti-lock braking system' },
+                    { icon: 'fas fa-tachometer-alt', title: 'Digital Display', description: 'Advanced instrument cluster' }
+                ],
+                rating: 4.8,
+                totalReviews: 89,
+                reviews: [
+                    {
+                        id: 1,
+                        user: 'Luca Rossi',
+                        rating: 5,
+                        comment: 'Incredible Italian engineering! Perfect balance of performance and comfort.',
+                        date: '2024-01-17'
+                    }
+                ]
             }
         };
 
