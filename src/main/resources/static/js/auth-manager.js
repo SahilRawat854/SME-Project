@@ -25,6 +25,8 @@ class AuthManager {
         this.currentUser = user;
         localStorage.setItem('spinGoUser', JSON.stringify(user));
         this.updateNavigation();
+        // Dispatch event for other components to listen
+        window.dispatchEvent(new CustomEvent('authStateChanged'));
     }
 
     logout() {
@@ -37,6 +39,8 @@ class AuthManager {
         sessionStorage.removeItem('user');
         sessionStorage.removeItem('spinGoUser');
         this.updateNavigation();
+        // Dispatch event for other components to listen
+        window.dispatchEvent(new CustomEvent('authStateChanged'));
         window.location.href = 'index.html';
     }
 

@@ -10,6 +10,7 @@ class BikesManager {
     init() {
         this.loadBikes();
         this.setupEventListeners();
+        this.setupAuthListener();
     }
 
     async loadBikes() {
@@ -286,6 +287,7 @@ class BikesManager {
                         <button class="btn btn-primary" onclick="bikesManager.viewBikeDetails(${bike.id})">
                             <i class="fas fa-eye"></i> View Details
                         </button>
+                        ${this.shouldShowRentButtons() ? `
                         <div class="row g-2">
                             <div class="col-6">
                                 <button class="btn btn-outline-primary w-100" onclick="bikesManager.rentBike(${bike.id})">
@@ -298,6 +300,14 @@ class BikesManager {
                                 </button>
                             </div>
                         </div>
+                        ` : `
+                        <div class="text-center">
+                            <small class="text-muted">
+                                <i class="fas fa-lock me-1"></i>
+                                Login as customer to rent or add to cart
+                            </small>
+                        </div>
+                        `}
                     </div>
                 </div>
             </div>
@@ -314,6 +324,29 @@ class BikesManager {
             'STANDARD': 'Standard'
         };
         return typeMap[type] || type;
+    }
+
+    shouldShowRentButtons() {
+        // Check if user is authenticated and has CUSTOMER role
+        if (window.authManager && window.authManager.isAuthenticated()) {
+            const userRole = window.authManager.getUserRole();
+            return userRole === 'CUSTOMER';
+        }
+        return false;
+    }
+
+    setupAuthListener() {
+        // Listen for authentication changes and refresh bike cards
+        window.addEventListener('authStateChanged', () => {
+            this.renderBikes();
+        });
+        
+        // Also listen for storage changes (login/logout from other tabs)
+        window.addEventListener('storage', (e) => {
+            if (e.key === 'spinGoUser' || e.key === 'user') {
+                this.renderBikes();
+            }
+        });
     }
 
     filterBikes() {
