@@ -16,65 +16,68 @@
     
     <style>
         .document-card {
-            border: 2px solid var(--bs-border-color);
+            border: 2px solid var(--dark-border, #404040);
             border-radius: 15px;
             padding: 25px;
             margin-bottom: 25px;
             transition: all 0.3s ease;
-            background: var(--bs-body-bg);
+            background: var(--dark-bg-card, #2a2a2a);
+            color: var(--dark-text-primary, #ffffff);
         }
         
         .document-card.uploaded {
-            border-color: var(--bs-success);
-            background: rgba(var(--bs-success-rgb), 0.05);
+            border-color: var(--dark-accent-secondary, #28a745);
+            background: rgba(40, 167, 69, 0.1);
         }
         
         .document-card.verified {
-            border-color: var(--bs-primary);
-            background: rgba(var(--bs-primary-rgb), 0.05);
+            border-color: var(--dark-accent-primary, #007bff);
+            background: rgba(0, 123, 255, 0.1);
         }
         
         .document-card.rejected {
-            border-color: var(--bs-danger);
-            background: rgba(var(--bs-danger-rgb), 0.05);
+            border-color: var(--dark-accent-danger, #dc3545);
+            background: rgba(220, 53, 69, 0.1);
         }
         
         .upload-area {
-            border: 2px dashed var(--bs-border-color);
+            border: 2px dashed var(--dark-border, #404040);
             border-radius: 10px;
             padding: 40px;
             text-align: center;
             cursor: pointer;
             transition: all 0.3s ease;
-            background: var(--bs-secondary-bg);
+            background: var(--dark-bg-secondary, #2d2d2d);
+            color: var(--dark-text-primary, #ffffff);
         }
         
         .upload-area:hover {
-            border-color: var(--bs-primary);
-            background: rgba(var(--bs-primary-rgb), 0.05);
+            border-color: var(--dark-accent-primary, #007bff);
+            background: rgba(0, 123, 255, 0.1);
         }
         
         .upload-area.dragover {
-            border-color: var(--bs-primary);
-            background: rgba(var(--bs-primary-rgb), 0.1);
+            border-color: var(--dark-accent-primary, #007bff);
+            background: rgba(0, 123, 255, 0.2);
         }
         
         .upload-icon {
             font-size: 3rem;
-            color: var(--bs-secondary);
+            color: var(--dark-text-muted, #888888);
             margin-bottom: 15px;
         }
         
         .upload-area.uploaded .upload-icon {
-            color: var(--bs-success);
+            color: var(--dark-accent-secondary, #28a745);
         }
         
         .file-preview {
             margin-top: 15px;
             padding: 15px;
-            background: var(--bs-body-bg);
+            background: var(--dark-bg-card, #2a2a2a);
             border-radius: 8px;
-            border: 1px solid var(--bs-border-color);
+            border: 1px solid var(--dark-border, #404040);
+            color: var(--dark-text-primary, #ffffff);
         }
         
         .file-info {
@@ -85,16 +88,16 @@
         
         .file-icon {
             font-size: 2rem;
-            color: var(--bs-primary);
+            color: var(--dark-accent-primary, #007bff);
         }
         
         .file-details h6 {
             margin: 0;
-            color: var(--bs-body-color);
+            color: var(--dark-text-primary, #ffffff);
         }
         
         .file-details small {
-            color: var(--bs-secondary);
+            color: var(--dark-text-muted, #888888);
         }
         
         .status-badge {
@@ -105,25 +108,27 @@
         }
         
         .status-pending {
-            background: var(--bs-warning-bg-subtle);
-            color: var(--bs-warning-text);
+            background: rgba(255, 193, 7, 0.2);
+            color: var(--dark-accent-warning, #ffc107);
         }
         
         .status-verified {
-            background: var(--bs-info-bg-subtle);
-            color: var(--bs-info-text);
+            background: rgba(0, 123, 255, 0.2);
+            color: var(--dark-accent-primary, #007bff);
         }
         
         .status-rejected {
-            background: var(--bs-danger-bg-subtle);
-            color: var(--bs-danger-text);
+            background: rgba(220, 53, 69, 0.2);
+            color: var(--dark-accent-danger, #dc3545);
         }
         
         .progress-section {
-            background: var(--bs-secondary-bg);
+            background: var(--dark-bg-secondary, #2d2d2d);
             border-radius: 15px;
             padding: 25px;
             margin-bottom: 30px;
+            border: 1px solid var(--dark-border, #404040);
+            color: var(--dark-text-primary, #ffffff);
         }
         
         .progress-bar {
@@ -132,10 +137,11 @@
         }
         
         .requirement-list {
-            background: var(--bs-secondary-bg);
+            background: var(--dark-bg-tertiary, #3a3a3a);
             border-radius: 10px;
             padding: 20px;
             margin-top: 20px;
+            border: 1px solid var(--dark-border, #404040);
         }
         
         .requirement-item {
@@ -145,7 +151,7 @@
         }
         
         .requirement-item i {
-            color: var(--bs-success);
+            color: var(--dark-accent-secondary, #28a745);
             margin-right: 10px;
         }
         
@@ -154,6 +160,43 @@
             align-items: center;
             gap: 10px;
             margin-top: 15px;
+        }
+        
+        /* Additional dark theme styles */
+        .card {
+            background: var(--dark-bg-card, #2a2a2a) !important;
+            border: 1px solid var(--dark-border, #404040) !important;
+            color: var(--dark-text-primary, #ffffff) !important;
+        }
+        
+        .card-body {
+            color: var(--dark-text-primary, #ffffff) !important;
+        }
+        
+        .alert-info {
+            background: rgba(0, 123, 255, 0.1) !important;
+            color: var(--dark-accent-primary, #007bff) !important;
+            border-color: var(--dark-accent-primary, #007bff) !important;
+        }
+        
+        .btn-outline-primary {
+            border-color: var(--dark-accent-primary, #007bff) !important;
+            color: var(--dark-accent-primary, #007bff) !important;
+        }
+        
+        .btn-outline-primary:hover {
+            background: var(--dark-accent-primary, #007bff) !important;
+            color: white !important;
+        }
+        
+        .btn-outline-secondary {
+            border-color: var(--dark-border, #404040) !important;
+            color: var(--dark-text-secondary, #b3b3b3) !important;
+        }
+        
+        .btn-outline-secondary:hover {
+            background: var(--dark-bg-hover, #404040) !important;
+            color: var(--dark-text-primary, #ffffff) !important;
         }
     </style>
 </head>
