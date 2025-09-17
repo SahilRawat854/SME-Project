@@ -166,26 +166,49 @@ class AuthManager {
         }
     }
 
-    // Method to simulate login for different roles
-    loginUser(email, password, role) {
-        // In a real application, this would make an API call
-        const users = {
-            'admin@spingo.com': { name: 'Admin User', role: 'ADMIN', email: 'admin@spingo.com' },
-            'mike@example.com': { name: 'Mike Johnson', role: 'INDIVIDUAL_OWNER', email: 'mike@example.com' },
-            'sarah@example.com': { name: 'Sarah Wilson', role: 'RENTAL_BUSINESS', email: 'sarah@example.com' },
-            'tom@example.com': { name: 'Tom Brown', role: 'DELIVERY_PARTNER', email: 'tom@example.com' },
-            'john@example.com': { name: 'John Doe', role: 'CUSTOMER', email: 'john@example.com' },
-            'jane@example.com': { name: 'Jane Smith', role: 'CUSTOMER', email: 'jane@example.com' },
-            'alice@example.com': { name: 'Alice Johnson', role: 'CUSTOMER', email: 'alice@example.com' }
-        };
-
-        const user = users[email];
-        if (user && user.role === role.toUpperCase()) {
-            this.saveUserToStorage(user);
-            return { success: true, user: user };
+    // Method to login user via API
+    async loginUser(email, password, role) {
+        try {
+            const response = await fetch('http://localhost:8080/api/auth/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    email: email,
+                    password: password,
+                    role: role
+                })
+            });
+            
+            const result = await response.json();
+            
+            if (response.ok && result.success) {
+                // Store token and user info
+                localStorage.setItem('token', result.token);
+                localStorage.setItem('user', JSON.stringify({
+                    id: result.id,
+                    name: result.name,
+                    email: result.email,
+                    role: result.role
+                }));
+                
+                // Save to auth manager
+                this.saveUserToStorage({
+                    id: result.id,
+                    name: result.name,
+                    email: result.email,
+                    role: result.role
+                });
+                
+                return { success: true, user: result };
+            } else {
+                return { success: false, message: result.message || 'Login failed' };
+            }
+        } catch (error) {
+            console.error('Login error:', error);
+            return { success: false, message: 'Network error. Please try again.' };
         }
-        
-        return { success: false, message: 'Invalid credentials' };
     }
 }
 

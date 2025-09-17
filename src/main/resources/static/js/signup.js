@@ -327,39 +327,51 @@ class SignupManager {
         const form = document.getElementById('signupForm');
         const formData = new FormData(form);
         
+        // Combine first name and last name into full name
+        const firstName = formData.get('firstName') || '';
+        const lastName = formData.get('lastName') || '';
+        const fullName = `${firstName} ${lastName}`.trim();
+        
+        // Combine address fields
+        const address = formData.get('address') || '';
+        const city = formData.get('city') || '';
+        const pincode = formData.get('pincode') || '';
+        const fullAddress = `${address}, ${city}, ${pincode}`.replace(/,\s*,/g, ',').replace(/^,\s*|,\s*$/g, '');
+        
         return {
-            userType: this.selectedUserType,
-            firstName: formData.get('firstName'),
-            lastName: formData.get('lastName'),
+            name: fullName,
             email: formData.get('email'),
             phone: formData.get('phone'),
-            dateOfBirth: formData.get('dateOfBirth'),
-            address: formData.get('address'),
-            city: formData.get('city'),
-            pincode: formData.get('pincode'),
             password: formData.get('password'),
-            terms: formData.get('terms') === 'on'
+            userType: this.selectedUserType,
+            address: fullAddress,
+            termsAccepted: formData.get('terms') === 'on'
         };
     }
 
     async submitSignup(formData) {
-        // Simulate API call delay
-        await new Promise(resolve => setTimeout(resolve, 2000));
-        
-        // In a real application, you would make an API call here
-        // const response = await fetch('/api/auth/signup', {
-        //     method: 'POST',
-        //     headers: {
-        //         'Content-Type': 'application/json',
-        //     },
-        //     body: JSON.stringify(formData)
-        // });
-        
-        // if (!response.ok) {
-        //     throw new Error('Signup failed');
-        // }
-        
-        console.log('Signup data:', formData);
+        try {
+            const response = await fetch('http://localhost:8080/api/auth/signup', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData)
+            });
+            
+            const result = await response.json();
+            
+            if (!response.ok) {
+                throw new Error(result.message || 'Signup failed');
+            }
+            
+            return result;
+        } catch (error) {
+            if (error.name === 'TypeError' && error.message.includes('fetch')) {
+                throw new Error('Unable to connect to server. Please check your internet connection and try again.');
+            }
+            throw error;
+        }
     }
 
     clearAllErrors() {

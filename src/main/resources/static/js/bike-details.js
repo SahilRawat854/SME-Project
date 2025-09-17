@@ -14,6 +14,8 @@ class BikeDetailsPage {
             this.showError();
         }
         this.setupEventListeners();
+        this.updateButtonVisibility();
+        this.setupAuthListener();
     }
 
     getBikeIdFromUrl() {
@@ -710,55 +712,102 @@ class BikeDetailsPage {
     }
 
     rentBike() {
-        // Store bike data in sessionStorage for booking page
-        sessionStorage.setItem('selectedBike', JSON.stringify(this.bikeData));
-        window.location.href = 'booking.html';
+        // Check if user is authenticated
+        if (window.authManager && window.authManager.isAuthenticated()) {
+            // Store bike data in sessionStorage for booking page
+            sessionStorage.setItem('selectedBike', JSON.stringify(this.bikeData));
+            window.location.href = 'booking.html';
+        } else {
+            this.showAlert('Please login to rent a bike. <a href="login.html" class="alert-link">Click here to login</a>', 'warning');
+        }
     }
 
     addToCart() {
-        // Add bike to cart (implement cart functionality)
-        const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-        const existingItem = cart.find(item => item.id === this.bikeData.id);
-        
-        if (existingItem) {
-            existingItem.quantity += 1;
+        // Check if user is authenticated
+        if (window.authManager && window.authManager.isAuthenticated()) {
+            // Add bike to cart (implement cart functionality)
+            const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            const existingItem = cart.find(item => item.id === this.bikeData.id);
+            
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({
+                    id: this.bikeData.id,
+                    brand: this.bikeData.brand,
+                    model: this.bikeData.model,
+                    pricePerDay: this.bikeData.pricePerDay,
+                    imageUrl: this.bikeData.imageUrl,
+                    quantity: 1
+                });
+            }
+            
+            localStorage.setItem('cart', JSON.stringify(cart));
+            
+            // Show success message
+            this.showAlert('Bike added to cart successfully!', 'success');
         } else {
-            cart.push({
-                id: this.bikeData.id,
-                brand: this.bikeData.brand,
-                model: this.bikeData.model,
-                pricePerDay: this.bikeData.pricePerDay,
-                imageUrl: this.bikeData.imageUrl,
-                quantity: 1
-            });
+            this.showAlert('Please login to add items to cart. <a href="login.html" class="alert-link">Click here to login</a>', 'warning');
         }
-        
-        localStorage.setItem('cart', JSON.stringify(cart));
-        
-        // Show success message
-        this.showAlert('Bike added to cart successfully!', 'success');
     }
 
     saveForLater() {
-        // Save bike for later (implement wishlist functionality)
-        const wishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
-        const existingItem = wishlist.find(item => item.id === this.bikeData.id);
-        
-        if (!existingItem) {
-            wishlist.push({
-                id: this.bikeData.id,
-                brand: this.bikeData.brand,
-                model: this.bikeData.model,
-                pricePerDay: this.bikeData.pricePerDay,
-                imageUrl: this.bikeData.imageUrl,
-                savedAt: new Date().toISOString()
-            });
+        // Check if user is authenticated
+        if (window.authManager && window.authManager.isAuthenticated()) {
+            // Save bike for later (implement wishlist functionality)
+            const wishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
+            const existingItem = wishlist.find(item => item.id === this.bikeData.id);
             
-            localStorage.setItem('wishlist', JSON.stringify(wishlist));
-            this.showAlert('Bike saved for later!', 'success');
+            if (!existingItem) {
+                wishlist.push({
+                    id: this.bikeData.id,
+                    brand: this.bikeData.brand,
+                    model: this.bikeData.model,
+                    pricePerDay: this.bikeData.pricePerDay,
+                    imageUrl: this.bikeData.imageUrl,
+                    savedAt: new Date().toISOString()
+                });
+                
+                localStorage.setItem('wishlist', JSON.stringify(wishlist));
+                this.showAlert('Bike saved for later!', 'success');
+            } else {
+                this.showAlert('Bike is already in your wishlist!', 'info');
+            }
         } else {
-            this.showAlert('Bike is already in your wishlist!', 'info');
+            this.showAlert('Please login to save bikes for later. <a href="login.html" class="alert-link">Click here to login</a>', 'warning');
         }
+    }
+
+    updateButtonVisibility() {
+        const rentBtn = document.getElementById('rentNowBtn');
+        const cartBtn = document.getElementById('addToCartBtn');
+        const saveBtn = document.getElementById('saveForLaterBtn');
+        
+        if (window.authManager && window.authManager.isAuthenticated()) {
+            // User is logged in - show all buttons
+            if (rentBtn) rentBtn.style.display = 'block';
+            if (cartBtn) cartBtn.style.display = 'block';
+            if (saveBtn) saveBtn.style.display = 'block';
+        } else {
+            // User is not logged in - show buttons but they will show login prompts when clicked
+            if (rentBtn) rentBtn.style.display = 'block';
+            if (cartBtn) cartBtn.style.display = 'block';
+            if (saveBtn) saveBtn.style.display = 'block';
+        }
+    }
+
+    setupAuthListener() {
+        // Listen for authentication changes and update button visibility
+        window.addEventListener('authStateChanged', () => {
+            this.updateButtonVisibility();
+        });
+
+        // Also listen for storage changes (login/logout from other tabs)
+        window.addEventListener('storage', (e) => {
+            if (e.key === 'spinGoUser' || e.key === 'user') {
+                this.updateButtonVisibility();
+            }
+        });
     }
 
     showError() {
