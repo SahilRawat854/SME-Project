@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Bike API</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1>Test Bike API</h1>
+        
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Login Test</h5>
+                    </div>
+                    <div class="card-body">
+                        <button class="btn btn-primary" onclick="testLogin()">Test Login</button>
+                        <div id="loginResult" class="mt-3"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Add Bike Test</h5>
+                    </div>
+                    <div class="card-body">
+                        <button class="btn btn-success" onclick="testAddBike()">Test Add Bike</button>
+                        <div id="bikeResult" class="mt-3"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Console Logs</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="consoleLogs" style="height: 300px; overflow-y: auto; background: #f8f9fa; padding: 10px; font-family: monospace;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/auth-manager.js"></script>
+    <script>
+        // Override console.log to display in the page
+        const originalLog = console.log;
+        const originalError = console.error;
+        
+        function addToConsole(message, type = 'log') {
+            const consoleDiv = document.getElementById('consoleLogs');
+            const timestamp = new Date().toLocaleTimeString();
+            const color = type === 'error' ? 'red' : 'black';
+            consoleDiv.innerHTML += `<div style="color: ${color};">[${timestamp}] ${message}</div>`;
+            consoleDiv.scrollTop = consoleDiv.scrollHeight;
+        }
+        
+        console.log = function(...args) {
+            originalLog.apply(console, args);
+            addToConsole(args.join(' '), 'log');
+        };
+        
+        console.error = function(...args) {
+            originalError.apply(console, args);
+            addToConsole(args.join(' '), 'error');
+        };
+
+        async function testLogin() {
+            try {
+                console.log('Testing login...');
+                
+                const loginData = {
+                    email: 'testowner@example.com',
+                    password: 'password123',
+                    role: 'INDIVIDUAL_OWNER'
+                };
+                
+                const response = await fetch('http://localhost:8080/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(loginData)
+                });
+                
+                const result = await response.json();
+                console.log('Login response:', result);
+                
+                if (result.success) {
+                    localStorage.setItem('token', result.token);
+                    localStorage.setItem('user', JSON.stringify({
+                        id: result.id,
+                        name: result.name,
+                        email: result.email,
+                        role: result.role
+                    }));
+                    
+                    document.getElementById('loginResult').innerHTML = `
+                        <div class="alert alert-success">
+                            <strong>Login Successful!</strong><br>
+                            Token: ${result.token}<br>
+                            User: ${result.name} (${result.role})
+                        </div>
+                    `;
+                } else {
+                    document.getElementById('loginResult').innerHTML = `
+                        <div class="alert alert-danger">
+                            <strong>Login Failed:</strong> ${result.message}
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                document.getElementById('loginResult').innerHTML = `
+                    <div class="alert alert-danger">
+                        <strong>Error:</strong> ${error.message}
+                    </div>
+                `;
+            }
+        }
+
+        async function testAddBike() {
+            try {
+                console.log('Testing add bike...');
+                
+                const token = localStorage.getItem('token');
+                const user = JSON.parse(localStorage.getItem('user') || '{}');
+                
+                console.log('Token:', token);
+                console.log('User:', user);
+                
+                if (!token) {
+                    throw new Error('No token found. Please login first.');
+                }
+                
+                const bikeData = {
+                    brand: 'Test Brand',
+                    model: 'Test Model',
+                    year: 2023,
+                    type: 'SPORT',
+                    city: 'Mumbai',
+                    pricePerHour: 500.00,
+                    pricePerDay: 3000.00,
+                    pricePerMonth: 60000.00,
+                    description: 'Test bike for API testing',
+                    imageUrl: 'images/test-bike.jpg'
+                };
+                
+                console.log('Bike data:', bikeData);
+                
+                const response = await fetch('http://localhost:8080/api/bikes/owner', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(bikeData)
+                });
+                
+                console.log('Response status:', response.status);
+                console.log('Response ok:', response.ok);
+                
+                const result = await response.json();
+                console.log('Bike response:', result);
+                
+                if (response.ok && result.success) {
+                    document.getElementById('bikeResult').innerHTML = `
+                        <div class="alert alert-success">
+                            <strong>Bike Added Successfully!</strong><br>
+                            ID: ${result.id}<br>
+                            Brand: ${result.brand} ${result.model}<br>
+                            Status: ${result.status}
+                        </div>
+                    `;
+                } else {
+                    document.getElementById('bikeResult').innerHTML = `
+                        <div class="alert alert-danger">
+                            <strong>Failed to Add Bike:</strong> ${result.message || 'Unknown error'}
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('Add bike error:', error);
+                document.getElementById('bikeResult').innerHTML = `
+                    <div class="alert alert-danger">
+                        <strong>Error:</strong> ${error.message}
+                    </div>
+                `;
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Test page loaded');
+            console.log('Current token:', localStorage.getItem('token'));
+            console.log('Current user:', localStorage.getItem('user'));
+        });
+    </script>
+</body>
+</html>

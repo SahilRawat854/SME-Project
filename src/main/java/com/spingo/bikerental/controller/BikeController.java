@@ -1,17 +1,17 @@
 package com.spingo.bikerental.controller;
 
 import com.spingo.bikerental.Bike;
-import com.spingo.bikerental.BikeStatus;
-import com.spingo.bikerental.BikeType;
 import com.spingo.bikerental.BikeRepository;
-import com.spingo.bikerental.dto.BikeDto;
+import com.spingo.bikerental.User;
+import com.spingo.bikerental.UserRepository;
+import com.spingo.bikerental.dto.CreateBikeRequest;
+import com.spingo.bikerental.dto.CreateBikeResponse;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import jakarta.validation.Valid;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -20,237 +20,327 @@ import java.util.Optional;
 @RequestMapping("/api/bikes")
 @CrossOrigin(origins = "*")
 public class BikeController {
-
+    
     @Autowired
     private BikeRepository bikeRepository;
-
-    // Get all bikes (public access)
+    
+    @Autowired
+    private UserRepository userRepository;
+    
+    @PostMapping
+    public ResponseEntity<?> createBike(@Valid @RequestBody CreateBikeRequest createBikeRequest) {
+        try {
+            // Create new bike entity
+            Bike bike = new Bike();
+            bike.setBrand(createBikeRequest.getBrand());
+            bike.setModel(createBikeRequest.getModel());
+            bike.setYear(createBikeRequest.getYear());
+            bike.setType(createBikeRequest.getType());
+            bike.setCity(createBikeRequest.getCity());
+            bike.setPricePerHour(createBikeRequest.getPricePerHour());
+            bike.setPricePerDay(createBikeRequest.getPricePerDay());
+            bike.setPricePerMonth(createBikeRequest.getPricePerMonth());
+            bike.setDescription(createBikeRequest.getDescription());
+            bike.setImageUrl(createBikeRequest.getImageUrl());
+            
+            // Set default values
+            bike.setIsActive(true);
+            
+            // Save bike to database
+            Bike savedBike = bikeRepository.save(bike);
+            
+            // Create success response
+            CreateBikeResponse response = new CreateBikeResponse(
+                savedBike, 
+                "Bike created successfully!", 
+                true
+            );
+            
+            return ResponseEntity.status(HttpStatus.CREATED).body(response);
+            
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(new CreateBikeResponse(false, "Failed to create bike. Please try again later."));
+        }
+    }
+    
+    @PostMapping("/owner")
+    public ResponseEntity<?> createBikeForOwner(@Valid @RequestBody CreateBikeRequest createBikeRequest,
+                                               @RequestHeader("Authorization") String authHeader) {
+        try {
+            // Extract user ID from token (simplified - in production use JWT)
+            Long ownerId = extractUserIdFromToken(authHeader);
+            if (ownerId == null) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(new CreateBikeResponse(false, "Invalid authentication token."));
+            }
+            
+            // Find owner user
+            Optional<User> ownerOptional = userRepository.findById(ownerId);
+            if (ownerOptional.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new CreateBikeResponse(false, "Owner not found."));
+            }
+            
+            User owner = ownerOptional.get();
+            
+            // Create new bike entity
+            Bike bike = new Bike();
+            bike.setBrand(createBikeRequest.getBrand());
+            bike.setModel(createBikeRequest.getModel());
+            bike.setYear(createBikeRequest.getYear());
+            bike.setType(createBikeRequest.getType());
+            bike.setCity(createBikeRequest.getCity());
+            bike.setPricePerHour(createBikeRequest.getPricePerHour());
+            bike.setPricePerDay(createBikeRequest.getPricePerDay());
+            bike.setPricePerMonth(createBikeRequest.getPricePerMonth());
+            bike.setDescription(createBikeRequest.getDescription());
+            bike.setImageUrl(createBikeRequest.getImageUrl());
+            bike.setOwner(owner);
+            
+            // Set default values
+            bike.setIsActive(true);
+            
+            // Save bike to database
+            Bike savedBike = bikeRepository.save(bike);
+            
+            // Create success response
+            CreateBikeResponse response = new CreateBikeResponse(
+                savedBike, 
+                "Bike added successfully!", 
+                true
+            );
+            
+            return ResponseEntity.status(HttpStatus.CREATED).body(response);
+            
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(new CreateBikeResponse(false, "Failed to add bike. Please try again later."));
+        }
+    }
+    
     @GetMapping
-    public ResponseEntity<List<BikeDto>> getAllBikes() {
+    public ResponseEntity<?> getAllBikes() {
         try {
             List<Bike> bikes = bikeRepository.findByIsActiveTrue();
-            List<BikeDto> bikeDtos = bikes.stream()
-                .map(BikeDto::new)
-                .toList();
-            return ResponseEntity.ok(bikeDtos);
+            return ResponseEntity.ok(bikes);
         } catch (Exception e) {
-            return ResponseEntity.badRequest()
-                .body(List.of());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(Map.of("error", "Failed to fetch bikes"));
         }
     }
-
-    // Get available bikes (public access)
-    @GetMapping("/available")
-    public ResponseEntity<List<BikeDto>> getAvailableBikes() {
+    
+    @GetMapping("/owner")
+    public ResponseEntity<?> getOwnerBikes(@RequestHeader("Authorization") String authHeader) {
         try {
-            List<Bike> bikes = bikeRepository.findByIsActiveTrueAndStatus(BikeStatus.AVAILABLE);
-            List<BikeDto> bikeDtos = bikes.stream()
-                .map(BikeDto::new)
-                .toList();
-            return ResponseEntity.ok(bikeDtos);
+            // Extract user ID from token
+            Long ownerId = extractUserIdFromToken(authHeader);
+            if (ownerId == null) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("error", "Invalid authentication token"));
+            }
+            
+            // Find owner user
+            Optional<User> ownerOptional = userRepository.findById(ownerId);
+            if (ownerOptional.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("error", "Owner not found"));
+            }
+            
+            User owner = ownerOptional.get();
+            List<Bike> bikes = bikeRepository.findByOwnerAndIsActiveTrue(owner);
+            
+            return ResponseEntity.ok(bikes);
+            
         } catch (Exception e) {
-            return ResponseEntity.badRequest()
-                .body(List.of());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(Map.of("error", "Failed to fetch owner bikes"));
         }
     }
-
-    // Get bike by ID (public access)
+    
     @GetMapping("/{id}")
     public ResponseEntity<?> getBikeById(@PathVariable Long id) {
         try {
-            Optional<Bike> bike = bikeRepository.findById(id);
-            if (bike.isPresent()) {
-                BikeDto bikeDto = new BikeDto(bike.get());
-                return ResponseEntity.ok(bikeDto);
-            } else {
-                return ResponseEntity.notFound().build();
-            }
-        } catch (Exception e) {
-            return ResponseEntity.badRequest()
-                .body(Map.of("error", "Failed to get bike: " + e.getMessage()));
-        }
-    }
-
-    // Create new bike (Admin, Individual Owner, Rental Business only)
-    @PostMapping
-    @PreAuthorize("hasAnyRole('ADMIN', 'INDIVIDUAL_OWNER', 'RENTAL_BUSINESS')")
-    public ResponseEntity<?> createBike(@Valid @RequestBody Bike bike) {
-        try {
-            Bike savedBike = bikeRepository.save(bike);
-            return ResponseEntity.ok(savedBike);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest()
-                .body(Map.of("error", "Failed to create bike: " + e.getMessage()));
-        }
-    }
-
-    // Update bike (Admin, Individual Owner, Rental Business only)
-    @PutMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'INDIVIDUAL_OWNER', 'RENTAL_BUSINESS')")
-    public ResponseEntity<?> updateBike(@PathVariable Long id, @Valid @RequestBody Bike bikeDetails) {
-        try {
             Optional<Bike> bikeOptional = bikeRepository.findById(id);
             if (bikeOptional.isEmpty()) {
-                return ResponseEntity.notFound().build();
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("error", "Bike not found"));
             }
-
+            
             Bike bike = bikeOptional.get();
-            bike.setBrand(bikeDetails.getBrand());
-            bike.setModel(bikeDetails.getModel());
-            bike.setYear(bikeDetails.getYear());
-            bike.setType(bikeDetails.getType());
-            bike.setCity(bikeDetails.getCity());
-            bike.setPricePerHour(bikeDetails.getPricePerHour());
-            bike.setPricePerDay(bikeDetails.getPricePerDay());
-            bike.setPricePerMonth(bikeDetails.getPricePerMonth());
-            bike.setDescription(bikeDetails.getDescription());
-            bike.setImageUrl(bikeDetails.getImageUrl());
-            bike.setStatus(bikeDetails.getStatus());
-
+            return ResponseEntity.ok(bike);
+            
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(Map.of("error", "Failed to fetch bike"));
+        }
+    }
+    
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateBike(@PathVariable Long id, 
+                                       @Valid @RequestBody CreateBikeRequest updateRequest,
+                                       @RequestHeader("Authorization") String authHeader) {
+        try {
+            // Extract user ID from token
+            Long ownerId = extractUserIdFromToken(authHeader);
+            if (ownerId == null) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(new CreateBikeResponse(false, "Invalid authentication token."));
+            }
+            
+            // Find bike
+            Optional<Bike> bikeOptional = bikeRepository.findById(id);
+            if (bikeOptional.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new CreateBikeResponse(false, "Bike not found."));
+            }
+            
+            Bike bike = bikeOptional.get();
+            
+            // Check if user owns this bike
+            if (bike.getOwner() == null || !bike.getOwner().getId().equals(ownerId)) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body(new CreateBikeResponse(false, "You don't have permission to update this bike."));
+            }
+            
+            // Update bike fields
+            bike.setBrand(updateRequest.getBrand());
+            bike.setModel(updateRequest.getModel());
+            bike.setYear(updateRequest.getYear());
+            bike.setType(updateRequest.getType());
+            bike.setCity(updateRequest.getCity());
+            bike.setPricePerHour(updateRequest.getPricePerHour());
+            bike.setPricePerDay(updateRequest.getPricePerDay());
+            bike.setPricePerMonth(updateRequest.getPricePerMonth());
+            bike.setDescription(updateRequest.getDescription());
+            bike.setImageUrl(updateRequest.getImageUrl());
+            
+            // Save updated bike
             Bike updatedBike = bikeRepository.save(bike);
-            return ResponseEntity.ok(updatedBike);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest()
-                .body(Map.of("error", "Failed to update bike: " + e.getMessage()));
-        }
-    }
-
-    // Delete bike (Admin only)
-    @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Void> deleteBike(@PathVariable Long id) {
-        if (!bikeRepository.existsById(id)) {
-            return ResponseEntity.notFound().build();
-        }
-        bikeRepository.deleteById(id);
-        return ResponseEntity.ok().build();
-    }
-
-    // Get bikes by status
-    @GetMapping("/status/{status}")
-    public ResponseEntity<List<BikeDto>> getBikesByStatus(@PathVariable BikeStatus status) {
-        try {
-            List<Bike> bikes = bikeRepository.findByStatus(status);
-            List<BikeDto> bikeDtos = bikes.stream()
-                .map(BikeDto::new)
-                .toList();
-            return ResponseEntity.ok(bikeDtos);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest()
-                .body(List.of());
-        }
-    }
-
-    // Get bikes by type
-    @GetMapping("/type/{type}")
-    public ResponseEntity<List<BikeDto>> getBikesByType(@PathVariable BikeType type) {
-        try {
-            List<Bike> bikes = bikeRepository.findByType(type);
-            List<BikeDto> bikeDtos = bikes.stream()
-                .map(BikeDto::new)
-                .toList();
-            return ResponseEntity.ok(bikeDtos);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest()
-                .body(List.of());
-        }
-    }
-
-    // Get bikes by city
-    @GetMapping("/city/{city}")
-    public ResponseEntity<List<BikeDto>> getBikesByCity(@PathVariable String city) {
-        try {
-            List<Bike> bikes = bikeRepository.findByCity(city);
-            List<BikeDto> bikeDtos = bikes.stream()
-                .map(BikeDto::new)
-                .toList();
-            return ResponseEntity.ok(bikeDtos);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest()
-                .body(List.of());
-        }
-    }
-
-    // Get bikes by brand
-    @GetMapping("/brand/{brand}")
-    public ResponseEntity<List<BikeDto>> getBikesByBrand(@PathVariable String brand) {
-        try {
-            List<Bike> bikes = bikeRepository.findByBrand(brand);
-            List<BikeDto> bikeDtos = bikes.stream()
-                .map(BikeDto::new)
-                .toList();
-            return ResponseEntity.ok(bikeDtos);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest()
-                .body(List.of());
-        }
-    }
-
-    // Filter bikes with multiple criteria
-    @GetMapping("/filter")
-    public ResponseEntity<List<BikeDto>> filterBikes(
-            @RequestParam(required = false) String city,
-            @RequestParam(required = false) BikeType type,
-            @RequestParam(required = false) String brand,
-            @RequestParam(required = false) BikeStatus status) {
-        
-        try {
-            List<Bike> bikes = bikeRepository.findBikesWithFilters(city, type, brand, status);
-            List<BikeDto> bikeDtos = bikes.stream()
-                .map(BikeDto::new)
-                .toList();
-            return ResponseEntity.ok(bikeDtos);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest()
-                .body(List.of());
-        }
-    }
-
-    // Get popular bikes (public access)
-    @GetMapping("/popular")
-    public ResponseEntity<List<BikeDto>> getPopularBikes() {
-        try {
-            // Get first 3 available bikes as popular bikes
-            List<Bike> popularBikes = bikeRepository.findByIsActiveTrueAndStatus(BikeStatus.AVAILABLE)
-                    .stream()
-                    .limit(3)
-                    .toList();
-            List<BikeDto> bikeDtos = popularBikes.stream()
-                .map(BikeDto::new)
-                .toList();
-            return ResponseEntity.ok(bikeDtos);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest()
-                .body(List.of());
-        }
-    }
-
-    // Check bike availability for specific time slot
-    @GetMapping("/{id}/availability")
-    public ResponseEntity<Map<String, Object>> checkBikeAvailability(
-            @PathVariable Long id,
-            @RequestParam String startDate,
-            @RequestParam String endDate) {
-        
-        Optional<Bike> bikeOptional = bikeRepository.findById(id);
-        if (bikeOptional.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-        
-        Bike bike = bikeOptional.get();
-        Map<String, Object> response = new HashMap<>();
-        
-        // Check if bike is available
-        if (bike.getStatus() != BikeStatus.AVAILABLE) {
-            response.put("available", false);
-            response.put("reason", "Bike is currently " + bike.getStatus().name().toLowerCase());
+            
+            // Create success response
+            CreateBikeResponse response = new CreateBikeResponse(
+                updatedBike, 
+                "Bike updated successfully!", 
+                true
+            );
+            
             return ResponseEntity.ok(response);
+            
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(new CreateBikeResponse(false, "Failed to update bike. Please try again later."));
         }
-        
-        // TODO: Add time slot conflict checking with booking repository
-        response.put("available", true);
-        response.put("bike", bike);
-        
-        return ResponseEntity.ok(response);
+    }
+    
+    @PatchMapping("/{id}/status")
+    public ResponseEntity<?> updateBikeStatus(@PathVariable Long id,
+                                             @RequestBody Map<String, String> statusRequest,
+                                             @RequestHeader("Authorization") String authHeader) {
+        try {
+            // Extract user ID from token
+            Long ownerId = extractUserIdFromToken(authHeader);
+            if (ownerId == null) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("error", "Invalid authentication token"));
+            }
+            
+            // Find bike
+            Optional<Bike> bikeOptional = bikeRepository.findById(id);
+            if (bikeOptional.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("error", "Bike not found"));
+            }
+            
+            Bike bike = bikeOptional.get();
+            
+            // Check if user owns this bike
+            if (bike.getOwner() == null || !bike.getOwner().getId().equals(ownerId)) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body(Map.of("error", "You don't have permission to update this bike"));
+            }
+            
+            // Update status
+            String newStatus = statusRequest.get("status");
+            if (newStatus != null) {
+                try {
+                    bike.setStatus(com.spingo.bikerental.BikeStatus.valueOf(newStatus));
+                    bikeRepository.save(bike);
+                    return ResponseEntity.ok(Map.of("message", "Bike status updated successfully"));
+                } catch (IllegalArgumentException e) {
+                    return ResponseEntity.badRequest()
+                        .body(Map.of("error", "Invalid status value"));
+                }
+            }
+            
+            return ResponseEntity.badRequest()
+                .body(Map.of("error", "Status is required"));
+            
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(Map.of("error", "Failed to update bike status"));
+        }
+    }
+    
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteBike(@PathVariable Long id,
+                                       @RequestHeader("Authorization") String authHeader) {
+        try {
+            // Extract user ID from token
+            Long ownerId = extractUserIdFromToken(authHeader);
+            if (ownerId == null) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("error", "Invalid authentication token"));
+            }
+            
+            // Find bike
+            Optional<Bike> bikeOptional = bikeRepository.findById(id);
+            if (bikeOptional.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("error", "Bike not found"));
+            }
+            
+            Bike bike = bikeOptional.get();
+            
+            // Check if user owns this bike
+            if (bike.getOwner() == null || !bike.getOwner().getId().equals(ownerId)) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body(Map.of("error", "You don't have permission to delete this bike"));
+            }
+            
+            // Soft delete by setting isActive to false
+            bike.setIsActive(false);
+            bikeRepository.save(bike);
+            
+            return ResponseEntity.ok(Map.of("message", "Bike deleted successfully"));
+            
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(Map.of("error", "Failed to delete bike"));
+        }
+    }
+    
+    @GetMapping("/health")
+    public ResponseEntity<Map<String, String>> health() {
+        return ResponseEntity.ok(Map.of("status", "UP", "service", "bike-service"));
+    }
+    
+    // Helper method to extract user ID from token (simplified implementation)
+    private Long extractUserIdFromToken(String authHeader) {
+        try {
+            if (authHeader != null && authHeader.startsWith("Bearer ")) {
+                String token = authHeader.substring(7);
+                // Simple token parsing - in production, use proper JWT parsing
+                if (token.startsWith("token_")) {
+                    String[] parts = token.split("_");
+                    if (parts.length >= 2) {
+                        return Long.parseLong(parts[1]);
+                    }
+                }
+            }
+            return null;
+        } catch (Exception e) {
+            return null;
+        }
     }
 }
