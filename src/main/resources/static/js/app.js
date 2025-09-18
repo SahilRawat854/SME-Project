@@ -16,12 +16,15 @@ class SpinGoApp {
     // API Connection Management
     async checkApiConnection() {
         try {
+            console.log('🔍 Checking API connection to:', `${this.apiBaseUrl}/auth/health`);
             const response = await fetch(`${this.apiBaseUrl}/auth/health`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
                 }
             });
+            
+            console.log('📡 Health check response status:', response.status);
             
             if (response.ok) {
                 this.isConnected = true;

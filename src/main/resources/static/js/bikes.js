@@ -23,18 +23,49 @@ class BikesManager {
             if (bikesGrid) bikesGrid.innerHTML = '';
             if (noResults) noResults.style.display = 'none';
 
-            if (window.app && window.app.isConnected) {
-                // Try to load from API
-                const response = await fetch(`${window.app.apiBaseUrl}/bikes`);
+            console.log('🔍 Checking API connection...');
+            console.log('window.app:', window.app);
+            console.log('window.app.isConnected:', window.app ? window.app.isConnected : 'app not found');
+
+            // Always try to fetch from API first, regardless of connection status
+            console.log('🌐 Attempting to fetch bikes from API...');
+            try {
+                const apiUrl = window.app ? window.app.apiBaseUrl : 'http://localhost:8080/api';
+                const response = await fetch(`${apiUrl}/bikes`);
+                console.log('📡 API Response status:', response.status);
+                
                 if (response.ok) {
-                    this.allBikes = await response.json();
+                    const apiBikes = await response.json();
+                    console.log('📊 Raw API bikes:', apiBikes);
+                    
+                    // Transform API bikes to match our frontend format
+                    this.allBikes = apiBikes.map(bike => ({
+                        id: bike.id,
+                        brand: bike.brand,
+                        model: bike.model,
+                        year: bike.year,
+                        type: bike.type,
+                        city: bike.city,
+                        pricePerHour: bike.pricePerHour,
+                        pricePerDay: bike.pricePerDay,
+                        pricePerMonth: bike.pricePerMonth,
+                        description: bike.description,
+                        status: bike.status,
+                        imageUrl: bike.imageUrl || 'images/Bike_1.jpg',
+                        owner: bike.owner ? {
+                            id: bike.owner.id,
+                            name: bike.owner.name
+                        } : null
+                    }));
                     console.log('✅ Loaded bikes from API:', this.allBikes.length);
+                    console.log('🚲 Transformed bikes:', this.allBikes);
                 } else {
                     console.log('❌ API error, using mock data');
                     this.allBikes = this.getMockBikes();
                 }
-            } else {
-                console.log('❌ Backend not connected, using mock data');
+            } catch (error) {
+                console.log('❌ API fetch failed:', error.message);
+                console.log('❌ Using mock data as fallback');
                 this.allBikes = this.getMockBikes();
             }
 
@@ -247,7 +278,8 @@ class BikesManager {
         const col = document.createElement('div');
         col.className = 'col-lg-4 col-md-6 mb-4';
 
-        const statusClass = bike.status === 'AVAILABLE' ? 'bg-success' : 'bg-warning';
+        const statusClass = this.getStatusClass(bike.status);
+        const statusDisplay = this.getStatusDisplay(bike.status);
         const typeDisplay = this.getTypeDisplayName(bike.type);
 
         col.innerHTML = `
@@ -257,10 +289,11 @@ class BikesManager {
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-start mb-2">
                         <h5 class="card-title">${bike.brand} ${bike.model}</h5>
-                        <span class="badge ${statusClass} status-badge">${bike.status === 'AVAILABLE' ? 'Available' : bike.status}</span>
+                        <span class="badge ${statusClass} status-badge">${statusDisplay}</span>
                     </div>
                     <p class="text-muted small mb-2">
                         <i class="fas fa-tag"></i> ${typeDisplay} | <i class="fas fa-map-marker-alt"></i> ${bike.city}
+                        ${bike.owner ? ` | <i class="fas fa-user"></i> ${bike.owner.name}` : ''}
                     </p>
                     <p class="card-text text-muted">${bike.description}</p>
                     <div class="row text-center mb-3">
@@ -326,6 +359,28 @@ class BikesManager {
         return typeMap[type] || type;
     }
 
+    getStatusClass(status) {
+        const statusMap = {
+            'AVAILABLE': 'bg-success',
+            'BOOKED': 'bg-warning',
+            'RENTED': 'bg-danger',
+            'MAINTENANCE': 'bg-secondary',
+            'UNAVAILABLE': 'bg-dark'
+        };
+        return statusMap[status] || 'bg-warning';
+    }
+
+    getStatusDisplay(status) {
+        const statusMap = {
+            'AVAILABLE': 'Available',
+            'BOOKED': 'Booked',
+            'RENTED': 'Rented',
+            'MAINTENANCE': 'Maintenance',
+            'UNAVAILABLE': 'Unavailable'
+        };
+        return statusMap[status] || status;
+    }
+
     shouldShowRentButtons() {
         // Check if user is authenticated and has CUSTOMER role
         if (window.authManager && window.authManager.isAuthenticated()) {
@@ -351,10 +406,23 @@ class BikesManager {
 
     filterBikes() {
         const cityFilter = document.getElementById('cityFilter').value;
+        const ownerFilter = document.getElementById('ownerFilter').value;
 
         this.filteredBikes = this.allBikes.filter(bike => {
             const matchesCity = !cityFilter || bike.city === cityFilter;
-            return matchesCity;
+            
+            let matchesOwner = true;
+            if (ownerFilter) {
+                if (ownerFilter === 'individual') {
+                    matchesOwner = bike.owner && bike.owner.name; // Has an individual owner
+                } else if (ownerFilter === 'business') {
+                    matchesOwner = bike.owner && bike.owner.name; // Has a business owner (same as individual for now)
+                } else if (ownerFilter === 'platform') {
+                    matchesOwner = !bike.owner; // No owner means platform bike
+                }
+            }
+            
+            return matchesCity && matchesOwner;
         });
 
         this.renderBikes();
@@ -496,6 +564,7 @@ class BikesManager {
     setupEventListeners() {
         // Auto-filter when dropdowns change
         document.getElementById('cityFilter')?.addEventListener('change', () => this.filterBikes());
+        document.getElementById('ownerFilter')?.addEventListener('change', () => this.filterBikes());
         
         // Date and time change listeners
         document.getElementById('pickupDate')?.addEventListener('change', () => this.calculateTimeAndUpdatePricing());

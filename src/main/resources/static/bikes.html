@@ -13,6 +13,21 @@
     <!-- Custom CSS -->
     <link href="css/style.css" rel="stylesheet">
     <link href="css/dark-theme.css" rel="stylesheet">
+    
+    <style>
+        .status-badge {
+            font-size: 0.75rem;
+        }
+        
+        .bike-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .bike-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+    </style>
 </head>
 <body>
     <!-- Navigation -->
@@ -109,6 +124,15 @@
                                         <option value="Hyderabad">Hyderabad</option>
                                         <option value="Pune">Pune</option>
                                         <option value="Ahmedabad">Ahmedabad</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="ownerFilter" class="form-label">Owner Type</label>
+                                    <select class="form-select" id="ownerFilter">
+                                        <option value="">All Bikes</option>
+                                        <option value="individual">Individual Owners</option>
+                                        <option value="business">Business Owners</option>
+                                        <option value="platform">Platform Bikes</option>
                                     </select>
                                 </div>
                                 <div class="col-md-3">
