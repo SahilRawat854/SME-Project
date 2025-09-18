@@ -8,9 +8,15 @@ class BikeDetailsPage {
     }
 
     init() {
+        console.log('🚀 Initializing bike details page...');
+        console.log('🆔 Bike ID from URL:', this.bikeId);
+        console.log('🌐 Current URL:', window.location.href);
+        
         if (this.bikeId) {
+            console.log('✅ Bike ID found, loading details...');
             this.loadBikeDetails();
         } else {
+            console.log('❌ No bike ID found, showing error...');
             this.showError();
         }
         this.setupEventListeners();
@@ -25,17 +31,32 @@ class BikeDetailsPage {
 
     async loadBikeDetails() {
         try {
+            console.log('🔍 Loading bike details from API for ID:', this.bikeId);
+            console.log('🌐 API URL:', `${this.apiBaseUrl}/bikes/${this.bikeId}`);
+            
             // Try to load from API first
             const response = await fetch(`${this.apiBaseUrl}/bikes/${this.bikeId}`);
+            console.log('📡 API Response status:', response.status);
+            console.log('📡 API Response headers:', response.headers);
+            
             if (response.ok) {
-                this.bikeData = await response.json();
+                const apiBikeData = await response.json();
+                console.log('📊 Raw API bike data:', apiBikeData);
+                
+                // Transform API data to include specifications
+                this.bikeData = this.transformApiDataToBikeDetails(apiBikeData);
+                console.log('🚲 Transformed bike data:', this.bikeData);
+                
                 this.renderBikeDetails();
             } else {
-                // Fallback to mock data
+                console.log('❌ API error, response not ok. Status:', response.status);
+                const errorText = await response.text();
+                console.log('❌ Error response:', errorText);
                 this.loadMockBikeData();
             }
         } catch (error) {
-            console.log('API not available, using mock data:', error.message);
+            console.log('❌ API not available, using mock data:', error.message);
+            console.log('❌ Full error:', error);
             this.loadMockBikeData();
         }
     }
@@ -63,7 +84,25 @@ class BikeDetailsPage {
                     weight: '194 kg',
                     seatHeight: '820 mm',
                     topSpeed: '260 km/h',
-                    acceleration: '0-100 km/h in 3.2s'
+                    acceleration: '0-100 km/h in 3.2s',
+                    fuelType: 'Petrol',
+                    coolingSystem: 'Liquid Cooled',
+                    ignition: 'Digital CDI',
+                    starter: 'Electric Start',
+                    clutch: 'Wet Multi-plate',
+                    frame: 'Aluminum Twin-spar',
+                    suspensionFront: 'Showa 41mm USD Fork',
+                    suspensionRear: 'Pro-Link Monoshock',
+                    brakesFront: 'Dual 320mm Disc',
+                    brakesRear: 'Single 220mm Disc',
+                    abs: 'Dual Channel ABS',
+                    tiresFront: '120/70 ZR17',
+                    tiresRear: '180/55 ZR17',
+                    wheelbase: '1400mm',
+                    groundClearance: '130mm',
+                    fuelEconomy: '15-18 km/l',
+                    warranty: '2 Years',
+                    serviceInterval: '6000 km'
                 },
                 features: [
                     { icon: 'fas fa-bolt', title: 'Quick Shifter', description: 'Seamless gear changes' },
@@ -490,6 +529,463 @@ class BikeDetailsPage {
         this.renderBikeDetails();
     }
 
+    transformApiDataToBikeDetails(apiData) {
+        // Get specifications based on brand and model
+        const specifications = this.getSpecificationsForBike(apiData.brand, apiData.model, apiData.type);
+        
+        // Get features based on bike type and specifications
+        const features = this.getFeaturesForBike(apiData.type, specifications);
+        
+        // Transform API data to include specifications and features
+        return {
+            id: apiData.id,
+            brand: apiData.brand,
+            model: apiData.model,
+            year: apiData.year,
+            type: apiData.type,
+            city: apiData.city,
+            pricePerHour: apiData.pricePerHour,
+            pricePerDay: apiData.pricePerDay,
+            pricePerMonth: apiData.pricePerMonth,
+            description: apiData.description,
+            status: apiData.status,
+            imageUrl: apiData.imageUrl || 'images/Bike_1.jpg',
+            owner: apiData.owner ? {
+                id: apiData.owner.id,
+                name: apiData.owner.name
+            } : null,
+            specifications: specifications,
+            features: features
+        };
+    }
+
+    getSpecificationsForBike(brand, model, type) {
+        // Create a comprehensive specification mapping based on brand, model, and type
+        const specMap = {
+            'Yamaha': {
+                'YZF-R1': {
+                    engine: '998cc Inline-4',
+                    power: '200 HP @ 13,500 RPM',
+                    torque: '112 Nm @ 11,500 RPM',
+                    transmission: '6-Speed Manual',
+                    fuelType: 'Petrol',
+                    coolingSystem: 'Liquid Cooled',
+                    ignition: 'Digital CDI',
+                    starter: 'Electric Start',
+                    clutch: 'Wet Multi-plate',
+                    frame: 'Aluminum Twin-spar',
+                    suspensionFront: 'KYB 43mm USD Fork',
+                    suspensionRear: 'KYB Monoshock',
+                    brakesFront: 'Dual 320mm Disc',
+                    brakesRear: 'Single 220mm Disc',
+                    abs: 'Dual Channel ABS',
+                    tiresFront: '120/70 ZR17',
+                    tiresRear: '190/55 ZR17',
+                    wheelbase: '1405mm',
+                    groundClearance: '130mm',
+                    fuelEconomy: '12-15 km/l',
+                    warranty: '2 Years',
+                    serviceInterval: '6000 km',
+                    weight: '201 kg',
+                    seatHeight: '855 mm',
+                    topSpeed: '299 km/h',
+                    acceleration: '0-100 km/h in 2.8s',
+                    fuelCapacity: '17 L'
+                }
+            },
+            'Honda': {
+                'CBR600RR': {
+                    engine: '599cc Inline-4',
+                    power: '118 HP @ 13,500 RPM',
+                    torque: '64 Nm @ 11,250 RPM',
+                    transmission: '6-Speed Manual',
+                    fuelType: 'Petrol',
+                    coolingSystem: 'Liquid Cooled',
+                    ignition: 'Digital CDI',
+                    starter: 'Electric Start',
+                    clutch: 'Wet Multi-plate',
+                    frame: 'Aluminum Twin-spar',
+                    suspensionFront: 'Showa 41mm USD Fork',
+                    suspensionRear: 'Pro-Link Monoshock',
+                    brakesFront: 'Dual 320mm Disc',
+                    brakesRear: 'Single 220mm Disc',
+                    abs: 'Dual Channel ABS',
+                    tiresFront: '120/70 ZR17',
+                    tiresRear: '180/55 ZR17',
+                    wheelbase: '1400mm',
+                    groundClearance: '130mm',
+                    fuelEconomy: '15-18 km/l',
+                    warranty: '2 Years',
+                    serviceInterval: '6000 km',
+                    weight: '194 kg',
+                    seatHeight: '820 mm',
+                    topSpeed: '260 km/h',
+                    acceleration: '0-100 km/h in 3.2s',
+                    fuelCapacity: '18.2 L'
+                },
+                'CBR1000RR': {
+                    engine: '999cc Inline-4',
+                    power: '189 HP @ 13,000 RPM',
+                    torque: '114 Nm @ 11,000 RPM',
+                    transmission: '6-Speed Manual',
+                    fuelType: 'Petrol',
+                    coolingSystem: 'Liquid Cooled',
+                    ignition: 'Digital CDI',
+                    starter: 'Electric Start',
+                    clutch: 'Wet Multi-plate',
+                    frame: 'Aluminum Twin-spar',
+                    suspensionFront: 'Showa 43mm USD Fork',
+                    suspensionRear: 'Pro-Link Monoshock',
+                    brakesFront: 'Dual 330mm Disc',
+                    brakesRear: 'Single 220mm Disc',
+                    abs: 'Dual Channel ABS',
+                    tiresFront: '120/70 ZR17',
+                    tiresRear: '190/50 ZR17',
+                    wheelbase: '1405mm',
+                    groundClearance: '130mm',
+                    fuelEconomy: '12-15 km/l',
+                    warranty: '2 Years',
+                    serviceInterval: '6000 km',
+                    weight: '201 kg',
+                    seatHeight: '832 mm',
+                    topSpeed: '299 km/h',
+                    acceleration: '0-100 km/h in 2.9s',
+                    fuelCapacity: '16 L'
+                }
+            },
+            'Kawasaki': {
+                'Ninja ZX-10R': {
+                    engine: '998cc Inline-4',
+                    power: '203 HP @ 13,200 RPM',
+                    torque: '114 Nm @ 11,400 RPM',
+                    transmission: '6-Speed Manual',
+                    fuelType: 'Petrol',
+                    coolingSystem: 'Liquid Cooled',
+                    ignition: 'Digital CDI',
+                    starter: 'Electric Start',
+                    clutch: 'Wet Multi-plate',
+                    frame: 'Aluminum Twin-spar',
+                    suspensionFront: 'Showa 43mm USD Fork',
+                    suspensionRear: 'Showa Monoshock',
+                    brakesFront: 'Dual 330mm Disc',
+                    brakesRear: 'Single 220mm Disc',
+                    abs: 'Dual Channel ABS',
+                    tiresFront: '120/70 ZR17',
+                    tiresRear: '190/55 ZR17',
+                    wheelbase: '1440mm',
+                    groundClearance: '130mm',
+                    fuelEconomy: '12-15 km/l',
+                    warranty: '2 Years',
+                    serviceInterval: '6000 km',
+                    weight: '207 kg',
+                    seatHeight: '835 mm',
+                    topSpeed: '299 km/h',
+                    acceleration: '0-100 km/h in 2.9s',
+                    fuelCapacity: '17 L'
+                }
+            },
+            'Harley-Davidson': {
+                'Street Glide': {
+                    engine: '1868cc V-Twin',
+                    power: '93 HP @ 5,020 RPM',
+                    torque: '158 Nm @ 3,250 RPM',
+                    transmission: '6-Speed Manual',
+                    fuelType: 'Petrol',
+                    coolingSystem: 'Air/Oil Cooled',
+                    ignition: 'Digital CDI',
+                    starter: 'Electric Start',
+                    clutch: 'Wet Multi-plate',
+                    frame: 'Steel Twin-spar',
+                    suspensionFront: '49mm Telescopic Fork',
+                    suspensionRear: 'Twin Shocks',
+                    brakesFront: 'Dual 300mm Disc',
+                    brakesRear: 'Single 300mm Disc',
+                    abs: 'Dual Channel ABS',
+                    tiresFront: '130/70 B18',
+                    tiresRear: '180/65 B16',
+                    wheelbase: '1625mm',
+                    groundClearance: '130mm',
+                    fuelEconomy: '15-18 km/l',
+                    warranty: '2 Years',
+                    serviceInterval: '8000 km',
+                    weight: '379 kg',
+                    seatHeight: '700 mm',
+                    topSpeed: '180 km/h',
+                    acceleration: '0-100 km/h in 5.2s',
+                    fuelCapacity: '22.7 L'
+                }
+            },
+            'BMW': {
+                'R 1250 GS Adventure': {
+                    engine: '1254cc Boxer Twin',
+                    power: '136 HP @ 7,750 RPM',
+                    torque: '143 Nm @ 6,250 RPM',
+                    transmission: '6-Speed Manual',
+                    fuelType: 'Petrol',
+                    coolingSystem: 'Liquid/Air Cooled',
+                    ignition: 'Digital CDI',
+                    starter: 'Electric Start',
+                    clutch: 'Wet Multi-plate',
+                    frame: 'Steel Bridge Frame',
+                    suspensionFront: 'Telelever 37mm',
+                    suspensionRear: 'Paralever Monoshock',
+                    brakesFront: 'Dual 305mm Disc',
+                    brakesRear: 'Single 276mm Disc',
+                    abs: 'Dual Channel ABS',
+                    tiresFront: '120/70 R19',
+                    tiresRear: '170/60 R17',
+                    wheelbase: '1508mm',
+                    groundClearance: '250mm',
+                    fuelEconomy: '18-22 km/l',
+                    warranty: '3 Years',
+                    serviceInterval: '10000 km',
+                    weight: '268 kg',
+                    seatHeight: '850 mm',
+                    topSpeed: '200 km/h',
+                    acceleration: '0-100 km/h in 3.6s',
+                    fuelCapacity: '30 L'
+                }
+            }
+        };
+
+        // Get specifications for the specific bike, or use default based on type
+        const brandSpecs = specMap[brand] || {};
+        const bikeSpecs = brandSpecs[model] || this.getDefaultSpecsForType(type);
+        
+        return bikeSpecs;
+    }
+
+    getDefaultSpecsForType(type) {
+        // Default specifications based on bike type
+        const defaultSpecs = {
+            'SPORT': {
+                engine: '600cc Inline-4',
+                power: '120 HP @ 13,000 RPM',
+                torque: '70 Nm @ 11,000 RPM',
+                transmission: '6-Speed Manual',
+                fuelType: 'Petrol',
+                coolingSystem: 'Liquid Cooled',
+                ignition: 'Digital CDI',
+                starter: 'Electric Start',
+                clutch: 'Wet Multi-plate',
+                frame: 'Aluminum Twin-spar',
+                suspensionFront: 'USD Fork',
+                suspensionRear: 'Monoshock',
+                brakesFront: 'Dual Disc',
+                brakesRear: 'Single Disc',
+                abs: 'Dual Channel ABS',
+                tiresFront: '120/70 ZR17',
+                tiresRear: '180/55 ZR17',
+                wheelbase: '1400mm',
+                groundClearance: '130mm',
+                fuelEconomy: '15-18 km/l',
+                warranty: '2 Years',
+                serviceInterval: '6000 km',
+                weight: '200 kg',
+                seatHeight: '820 mm',
+                topSpeed: '250 km/h',
+                acceleration: '0-100 km/h in 3.5s',
+                fuelCapacity: '17 L'
+            },
+            'CRUISER': {
+                engine: '800cc V-Twin',
+                power: '60 HP @ 5,500 RPM',
+                torque: '80 Nm @ 3,500 RPM',
+                transmission: '5-Speed Manual',
+                fuelType: 'Petrol',
+                coolingSystem: 'Air Cooled',
+                ignition: 'Digital CDI',
+                starter: 'Electric Start',
+                clutch: 'Wet Multi-plate',
+                frame: 'Steel Frame',
+                suspensionFront: 'Telescopic Fork',
+                suspensionRear: 'Twin Shocks',
+                brakesFront: 'Single Disc',
+                brakesRear: 'Single Disc',
+                abs: 'Single Channel ABS',
+                tiresFront: '130/90 B16',
+                tiresRear: '170/80 B15',
+                wheelbase: '1600mm',
+                groundClearance: '120mm',
+                fuelEconomy: '18-22 km/l',
+                warranty: '2 Years',
+                serviceInterval: '8000 km',
+                weight: '280 kg',
+                seatHeight: '700 mm',
+                topSpeed: '180 km/h',
+                acceleration: '0-100 km/h in 6.0s',
+                fuelCapacity: '20 L'
+            },
+            'TOURING': {
+                engine: '1200cc Boxer Twin',
+                power: '125 HP @ 7,750 RPM',
+                torque: '125 Nm @ 6,500 RPM',
+                transmission: '6-Speed Manual',
+                fuelType: 'Petrol',
+                coolingSystem: 'Liquid/Air Cooled',
+                ignition: 'Digital CDI',
+                starter: 'Electric Start',
+                clutch: 'Wet Multi-plate',
+                frame: 'Steel Bridge Frame',
+                suspensionFront: 'Telelever',
+                suspensionRear: 'Paralever',
+                brakesFront: 'Dual Disc',
+                brakesRear: 'Single Disc',
+                abs: 'Dual Channel ABS',
+                tiresFront: '120/70 R19',
+                tiresRear: '170/60 R17',
+                wheelbase: '1500mm',
+                groundClearance: '200mm',
+                fuelEconomy: '18-22 km/l',
+                warranty: '3 Years',
+                serviceInterval: '10000 km',
+                weight: '250 kg',
+                seatHeight: '850 mm',
+                topSpeed: '200 km/h',
+                acceleration: '0-100 km/h in 4.0s',
+                fuelCapacity: '25 L'
+            },
+            'STANDARD': {
+                engine: '400cc Single Cylinder',
+                power: '45 HP @ 8,500 RPM',
+                torque: '40 Nm @ 7,000 RPM',
+                transmission: '6-Speed Manual',
+                fuelType: 'Petrol',
+                coolingSystem: 'Liquid Cooled',
+                ignition: 'Digital CDI',
+                starter: 'Electric Start',
+                clutch: 'Wet Multi-plate',
+                frame: 'Steel Frame',
+                suspensionFront: 'Telescopic Fork',
+                suspensionRear: 'Monoshock',
+                brakesFront: 'Single Disc',
+                brakesRear: 'Single Disc',
+                abs: 'Single Channel ABS',
+                tiresFront: '110/70 R17',
+                tiresRear: '150/60 R17',
+                wheelbase: '1400mm',
+                groundClearance: '150mm',
+                fuelEconomy: '25-30 km/l',
+                warranty: '2 Years',
+                serviceInterval: '6000 km',
+                weight: '180 kg',
+                seatHeight: '800 mm',
+                topSpeed: '160 km/h',
+                acceleration: '0-100 km/h in 5.5s',
+                fuelCapacity: '15 L'
+            }
+        };
+
+        return defaultSpecs[type] || defaultSpecs['STANDARD'];
+    }
+
+    getFeaturesForBike(type, specifications) {
+        // Generate features based on bike type and specifications
+        const features = [];
+        
+        // Common features based on specifications
+        if (specifications.abs && specifications.abs.includes('ABS')) {
+            features.push({
+                icon: 'fas fa-shield-alt',
+                title: 'ABS',
+                description: 'Anti-lock braking system for safety'
+            });
+        }
+        
+        if (specifications.coolingSystem && specifications.coolingSystem.includes('Liquid')) {
+            features.push({
+                icon: 'fas fa-thermometer-half',
+                title: 'Liquid Cooling',
+                description: 'Advanced cooling system'
+            });
+        }
+        
+        if (specifications.transmission && specifications.transmission.includes('6-Speed')) {
+            features.push({
+                icon: 'fas fa-cogs',
+                title: '6-Speed Transmission',
+                description: 'Smooth gear shifting'
+            });
+        }
+        
+        // Type-specific features
+        if (type === 'SPORT') {
+            features.push(
+                {
+                    icon: 'fas fa-bolt',
+                    title: 'Quick Shifter',
+                    description: 'Seamless gear changes'
+                },
+                {
+                    icon: 'fas fa-tachometer-alt',
+                    title: 'Ride Modes',
+                    description: 'Multiple riding modes'
+                },
+                {
+                    icon: 'fas fa-chart-line',
+                    title: 'High Performance',
+                    description: 'Track-ready performance'
+                }
+            );
+        } else if (type === 'CRUISER') {
+            features.push(
+                {
+                    icon: 'fas fa-chair',
+                    title: 'Comfortable Seating',
+                    description: 'Ergonomic design for long rides'
+                },
+                {
+                    icon: 'fas fa-volume-up',
+                    title: 'Premium Sound',
+                    description: 'High-quality audio system'
+                },
+                {
+                    icon: 'fas fa-shield-alt',
+                    title: 'Stability',
+                    description: 'Low center of gravity'
+                }
+            );
+        } else if (type === 'TOURING') {
+            features.push(
+                {
+                    icon: 'fas fa-suitcase',
+                    title: 'Storage Capacity',
+                    description: 'Ample storage space'
+                },
+                {
+                    icon: 'fas fa-wind',
+                    title: 'Wind Protection',
+                    description: 'Advanced wind management'
+                },
+                {
+                    icon: 'fas fa-map',
+                    title: 'Navigation',
+                    description: 'Built-in GPS system'
+                }
+            );
+        } else if (type === 'STANDARD') {
+            features.push(
+                {
+                    icon: 'fas fa-leaf',
+                    title: 'Fuel Efficient',
+                    description: 'Excellent fuel economy'
+                },
+                {
+                    icon: 'fas fa-city',
+                    title: 'City Friendly',
+                    description: 'Perfect for urban commuting'
+                },
+                {
+                    icon: 'fas fa-wrench',
+                    title: 'Easy Maintenance',
+                    description: 'Low maintenance costs'
+                }
+            );
+        }
+        
+        return features;
+    }
+
     renderBikeDetails() {
         if (!this.bikeData) {
             this.showError();
@@ -527,6 +1023,11 @@ class BikeDetailsPage {
 
         // Update specifications
         this.renderSpecifications();
+        this.renderEngineSpecifications();
+        this.renderChassisSpecifications();
+        this.renderBrakeSpecifications();
+        this.renderDimensionSpecifications();
+        this.renderWarrantySpecifications();
 
         // Update features
         this.renderFeatures();
@@ -550,14 +1051,107 @@ class BikeDetailsPage {
         const specsContainer = document.getElementById('bikeSpecs');
         specsContainer.innerHTML = '';
 
-        Object.entries(this.bikeData.specifications).forEach(([key, value]) => {
-            const specItem = document.createElement('div');
-            specItem.className = 'spec-item';
-            specItem.innerHTML = `
-                <span class="spec-label">${this.formatSpecLabel(key)}</span>
-                <span class="spec-value">${value}</span>
-            `;
-            specsContainer.appendChild(specItem);
+        const basicSpecs = ['brand', 'model', 'year', 'type', 'city', 'status'];
+        basicSpecs.forEach(key => {
+            if (this.bikeData[key]) {
+                const specItem = document.createElement('div');
+                specItem.className = 'spec-item';
+                specItem.innerHTML = `
+                    <span class="spec-label">${this.formatSpecLabel(key)}</span>
+                    <span class="spec-value">${this.bikeData[key]}</span>
+                `;
+                specsContainer.appendChild(specItem);
+            }
+        });
+    }
+
+    renderEngineSpecifications() {
+        const specsContainer = document.getElementById('engineSpecs');
+        specsContainer.innerHTML = '';
+
+        const engineSpecs = ['engine', 'power', 'torque', 'transmission', 'fuelType', 'coolingSystem', 'ignition', 'starter', 'clutch', 'fuelEconomy'];
+        engineSpecs.forEach(key => {
+            if (this.bikeData.specifications && this.bikeData.specifications[key]) {
+                const specItem = document.createElement('div');
+                specItem.className = 'spec-item';
+                specItem.innerHTML = `
+                    <span class="spec-label">${this.formatSpecLabel(key)}</span>
+                    <span class="spec-value">${this.bikeData.specifications[key]}</span>
+                `;
+                specsContainer.appendChild(specItem);
+            }
+        });
+    }
+
+    renderChassisSpecifications() {
+        const specsContainer = document.getElementById('chassisSpecs');
+        specsContainer.innerHTML = '';
+
+        const chassisSpecs = ['frame', 'suspensionFront', 'suspensionRear', 'tiresFront', 'tiresRear', 'wheelbase'];
+        chassisSpecs.forEach(key => {
+            if (this.bikeData.specifications && this.bikeData.specifications[key]) {
+                const specItem = document.createElement('div');
+                specItem.className = 'spec-item';
+                specItem.innerHTML = `
+                    <span class="spec-label">${this.formatSpecLabel(key)}</span>
+                    <span class="spec-value">${this.bikeData.specifications[key]}</span>
+                `;
+                specsContainer.appendChild(specItem);
+            }
+        });
+    }
+
+    renderBrakeSpecifications() {
+        const specsContainer = document.getElementById('brakeSpecs');
+        specsContainer.innerHTML = '';
+
+        const brakeSpecs = ['brakesFront', 'brakesRear', 'abs'];
+        brakeSpecs.forEach(key => {
+            if (this.bikeData.specifications && this.bikeData.specifications[key]) {
+                const specItem = document.createElement('div');
+                specItem.className = 'spec-item';
+                specItem.innerHTML = `
+                    <span class="spec-label">${this.formatSpecLabel(key)}</span>
+                    <span class="spec-value">${this.bikeData.specifications[key]}</span>
+                `;
+                specsContainer.appendChild(specItem);
+            }
+        });
+    }
+
+    renderDimensionSpecifications() {
+        const specsContainer = document.getElementById('dimensionSpecs');
+        specsContainer.innerHTML = '';
+
+        const dimensionSpecs = ['weight', 'seatHeight', 'groundClearance', 'topSpeed', 'acceleration'];
+        dimensionSpecs.forEach(key => {
+            if (this.bikeData.specifications && this.bikeData.specifications[key]) {
+                const specItem = document.createElement('div');
+                specItem.className = 'spec-item';
+                specItem.innerHTML = `
+                    <span class="spec-label">${this.formatSpecLabel(key)}</span>
+                    <span class="spec-value">${this.bikeData.specifications[key]}</span>
+                `;
+                specsContainer.appendChild(specItem);
+            }
+        });
+    }
+
+    renderWarrantySpecifications() {
+        const specsContainer = document.getElementById('warrantySpecs');
+        specsContainer.innerHTML = '';
+
+        const warrantySpecs = ['warranty', 'serviceInterval', 'fuelCapacity'];
+        warrantySpecs.forEach(key => {
+            if (this.bikeData.specifications && this.bikeData.specifications[key]) {
+                const specItem = document.createElement('div');
+                specItem.className = 'spec-item';
+                specItem.innerHTML = `
+                    <span class="spec-label">${this.formatSpecLabel(key)}</span>
+                    <span class="spec-value">${this.bikeData.specifications[key]}</span>
+                `;
+                specsContainer.appendChild(specItem);
+            }
         });
     }
 
@@ -838,7 +1432,43 @@ class BikeDetailsPage {
 
     // Utility methods
     formatSpecLabel(key) {
-        return key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
+        const labelMap = {
+            'brand': 'Brand',
+            'model': 'Model',
+            'year': 'Year',
+            'type': 'Type',
+            'city': 'City',
+            'status': 'Status',
+            'engine': 'Engine',
+            'power': 'Power',
+            'torque': 'Torque',
+            'transmission': 'Transmission',
+            'fuelType': 'Fuel Type',
+            'coolingSystem': 'Cooling System',
+            'ignition': 'Ignition',
+            'starter': 'Starter',
+            'clutch': 'Clutch',
+            'fuelEconomy': 'Fuel Economy',
+            'frame': 'Frame',
+            'suspensionFront': 'Front Suspension',
+            'suspensionRear': 'Rear Suspension',
+            'tiresFront': 'Front Tires',
+            'tiresRear': 'Rear Tires',
+            'wheelbase': 'Wheelbase',
+            'brakesFront': 'Front Brakes',
+            'brakesRear': 'Rear Brakes',
+            'abs': 'ABS',
+            'weight': 'Weight',
+            'seatHeight': 'Seat Height',
+            'groundClearance': 'Ground Clearance',
+            'topSpeed': 'Top Speed',
+            'acceleration': 'Acceleration',
+            'fuelCapacity': 'Fuel Capacity',
+            'warranty': 'Warranty',
+            'serviceInterval': 'Service Interval'
+        };
+        
+        return labelMap[key] || key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
     }
 
     generateStars(rating) {

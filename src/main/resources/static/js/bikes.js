@@ -11,6 +11,7 @@ class BikesManager {
         this.loadBikes();
         this.setupEventListeners();
         this.setupAuthListener();
+        this.updateNavbarVisibility();
     }
 
     async loadBikes() {
@@ -317,7 +318,7 @@ class BikesManager {
                 </div>
                 <div class="card-footer bg-white border-0">
                     <div class="d-grid gap-2">
-                        <button class="btn btn-primary" onclick="bikesManager.viewBikeDetails(${bike.id})">
+                        <button class="btn btn-primary" onclick="if(window.bikesManager) { window.bikesManager.viewBikeDetails(${bike.id}); } else { console.error('bikesManager not available'); }">
                             <i class="fas fa-eye"></i> View Details
                         </button>
                         ${this.shouldShowRentButtons() ? `
@@ -328,7 +329,7 @@ class BikesManager {
                                 </button>
                             </div>
                             <div class="col-6">
-                                <button class="btn btn-outline-success w-100" onclick="bikesManager.addToCart(${bike.id})">
+                                <button class="btn btn-outline-success w-100" onclick="if(window.bikesManager) { window.bikesManager.addToCart(${bike.id}); } else { console.error('bikesManager not available'); }">
                                     <i class="fas fa-cart-plus"></i> Add to Cart
                                 </button>
                             </div>
@@ -383,10 +384,17 @@ class BikesManager {
 
     shouldShowRentButtons() {
         // Check if user is authenticated and has CUSTOMER role
+        console.log('🔍 Checking if should show rent buttons...');
+        console.log('🔍 Auth manager available:', !!window.authManager);
+        
         if (window.authManager && window.authManager.isAuthenticated()) {
             const userRole = window.authManager.getUserRole();
-            return userRole === 'CUSTOMER';
+            console.log('👤 User role:', userRole);
+            const shouldShow = userRole === 'CUSTOMER';
+            console.log('✅ Should show rent buttons:', shouldShow);
+            return shouldShow;
         }
+        console.log('❌ User not authenticated, not showing rent buttons');
         return false;
     }
 
@@ -394,14 +402,71 @@ class BikesManager {
         // Listen for authentication changes and refresh bike cards
         window.addEventListener('authStateChanged', () => {
             this.renderBikes();
+            this.updateNavbarVisibility();
         });
         
         // Also listen for storage changes (login/logout from other tabs)
         window.addEventListener('storage', (e) => {
             if (e.key === 'spinGoUser' || e.key === 'user') {
                 this.renderBikes();
+                this.updateNavbarVisibility();
             }
         });
+    }
+
+    updateNavbarVisibility() {
+        const loginNavItem = document.getElementById('loginNavItem');
+        const signupNavItem = document.getElementById('signupNavItem');
+        const userDropdown = document.getElementById('userDropdown');
+        const userName = document.getElementById('userName');
+        const dashboardLink = document.getElementById('dashboardLink');
+
+        if (window.authManager && window.authManager.isAuthenticated()) {
+            // User is logged in
+            if (loginNavItem) loginNavItem.style.display = 'none';
+            if (signupNavItem) signupNavItem.style.display = 'none';
+            if (userDropdown) userDropdown.style.display = 'block';
+            
+            const user = window.authManager.getCurrentUser();
+            if (userName && user) {
+                userName.textContent = user.name || user.email || 'User';
+            }
+            
+            // Update dashboard link based on user role
+            if (dashboardLink && user) {
+                const role = user.role;
+                switch (role) {
+                    case 'CUSTOMER':
+                        dashboardLink.href = 'dashboard.html';
+                        dashboardLink.textContent = 'Dashboard';
+                        break;
+                    case 'INDIVIDUAL_OWNER':
+                        dashboardLink.href = 'individual-owner-dashboard.html';
+                        dashboardLink.textContent = 'Owner Dashboard';
+                        break;
+                    case 'RENTAL_BUSINESS':
+                        dashboardLink.href = 'rental-business-dashboard.html';
+                        dashboardLink.textContent = 'Business Dashboard';
+                        break;
+                    case 'ADMIN':
+                        dashboardLink.href = 'admin-dashboard.html';
+                        dashboardLink.textContent = 'Admin Dashboard';
+                        break;
+                    case 'DELIVERY_PERSON':
+                        dashboardLink.href = 'delivery-dashboard.html';
+                        dashboardLink.textContent = 'Delivery Dashboard';
+                        break;
+                    default:
+                        dashboardLink.href = 'dashboard.html';
+                        dashboardLink.textContent = 'Dashboard';
+                }
+            }
+        } else {
+            // User is not logged in
+            if (loginNavItem) loginNavItem.style.display = 'block';
+            if (signupNavItem) signupNavItem.style.display = 'block';
+            if (userDropdown) userDropdown.style.display = 'none';
+        }
     }
 
     filterBikes() {
@@ -429,6 +494,9 @@ class BikesManager {
     }
 
     viewBikeDetails(bikeId) {
+        console.log('🔍 View Details clicked for bike ID:', bikeId);
+        console.log('🌐 Navigating to:', `bike-details.html?id=${bikeId}`);
+        
         // Always navigate to bike details page, even if backend is not connected
         // The bike details page will handle loading mock data if needed
         window.location.href = `bike-details.html?id=${bikeId}`;
@@ -473,58 +541,150 @@ class BikesManager {
     }
 
     addToCart(bikeId) {
-        // Check if user is authenticated
-        if (!window.authManager || !window.authManager.isAuthenticated()) {
-            this.showAlert('Please login to add items to cart', 'warning');
-            setTimeout(() => {
-                window.location.href = 'login.html';
-            }, 2000);
-            return;
-        }
-
-        // Find the bike in the current list
-        const bike = this.allBikes.find(b => b.id === bikeId);
-        if (!bike) {
-            this.showAlert('Bike not found', 'danger');
-            return;
-        }
-
-        // Create cart item
-        const cartItem = {
-            id: bike.id,
-            name: `${bike.year} ${bike.brand} ${bike.model}`,
-            image: bike.imageUrl || 'images/Bike_1.jpg',
-            price: bike.pricePerHour,
-            duration: 4, // Default 4 hours
-            quantity: 1,
-            totalPrice: bike.pricePerHour * 4,
-            features: [bike.type, 'Premium', 'Well Maintained']
-        };
-
-        // Get existing cart items
-        let cartItems = [];
-        const savedCart = localStorage.getItem('spinGoCart');
-        if (savedCart) {
-            cartItems = JSON.parse(savedCart);
-        }
-
-        // Check if bike already exists in cart
-        const existingItem = cartItems.find(item => item.id === bikeId);
-        if (existingItem) {
-            existingItem.quantity += 1;
-            existingItem.totalPrice = existingItem.price * existingItem.duration * existingItem.quantity;
+        console.log('🛒 Add to cart clicked for bike ID:', bikeId);
+        console.log('🔍 Auth manager available:', !!window.authManager);
+        console.log('🔍 Cart manager available:', !!window.cartManager);
+        console.log('🔍 User authenticated:', window.authManager ? window.authManager.isAuthenticated() : 'No auth manager');
+        
+        if (window.authManager && window.authManager.isAuthenticated()) {
+            const userRole = window.authManager.getUserRole();
+            console.log('👤 User role:', userRole);
+            
+            if (userRole === 'CUSTOMER') {
+                // Get bike data
+                const bike = this.allBikes.find(b => b.id === bikeId);
+                console.log('🚲 Bike found:', bike);
+                
+                if (bike) {
+                    // Show duration selection modal
+                    console.log('📱 Showing duration selection modal...');
+                    this.showDurationSelectionModal(bike);
+                } else {
+                    console.error('❌ Bike not found in allBikes array');
+                    this.showAlert('Bike not found', 'error');
+                }
+            } else {
+                console.log('❌ User is not a customer, role:', userRole);
+                this.showAlert('Only customers can add items to cart', 'warning');
+            }
         } else {
-            cartItems.push(cartItem);
+            console.log('❌ User not authenticated');
+            this.showAlert('Please login to add items to cart', 'warning');
+        }
+    }
+
+    showDurationSelectionModal(bike) {
+        console.log('📱 Creating duration selection modal for bike:', bike);
+        
+        // Create modal HTML
+        const modalHTML = `
+            <div class="modal fade" id="durationModal" tabindex="-1">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Select Rental Duration</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="text-center mb-4">
+                                <img src="${bike.imageUrl || 'images/Bike_1.jpg'}" alt="${bike.brand} ${bike.model}" 
+                                     style="width: 200px; height: 150px; object-fit: cover; border-radius: 10px;">
+                                <h5 class="mt-3">${bike.brand} ${bike.model}</h5>
+                                <p class="text-muted">${bike.year} • ${bike.type} • ${bike.city}</p>
+                            </div>
+                            
+                            <div class="row g-3">
+                                <div class="col-4">
+                                    <div class="card duration-option" data-duration="hourly">
+                                        <div class="card-body text-center">
+                                            <i class="fas fa-clock fa-2x text-primary mb-2"></i>
+                                            <h6>Hourly</h6>
+                                            <p class="text-success fw-bold">₹${bike.pricePerHour.toLocaleString()}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="card duration-option" data-duration="daily">
+                                        <div class="card-body text-center">
+                                            <i class="fas fa-calendar-day fa-2x text-primary mb-2"></i>
+                                            <h6>Daily</h6>
+                                            <p class="text-success fw-bold">₹${bike.pricePerDay.toLocaleString()}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="card duration-option" data-duration="monthly">
+                                        <div class="card-body text-center">
+                                            <i class="fas fa-calendar-alt fa-2x text-primary mb-2"></i>
+                                            <h6>Monthly</h6>
+                                            <p class="text-success fw-bold">₹${bike.pricePerMonth.toLocaleString()}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-4">
+                                <label for="quantity" class="form-label">Quantity:</label>
+                                <div class="input-group">
+                                    <button class="btn btn-outline-secondary" type="button" onclick="changeQuantity(-1)">-</button>
+                                    <input type="number" class="form-control text-center" id="quantity" value="1" min="1" max="10">
+                                    <button class="btn btn-outline-secondary" type="button" onclick="changeQuantity(1)">+</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="button" class="btn btn-primary" id="addToCartBtn" onclick="addSelectedToCart(${bike.id})">
+                                <i class="fas fa-cart-plus me-2"></i>Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        // Remove existing modal if any
+        const existingModal = document.getElementById('durationModal');
+        if (existingModal) {
+            existingModal.remove();
         }
 
-        // Save to localStorage
-        localStorage.setItem('spinGoCart', JSON.stringify(cartItems));
+        // Add modal to body
+        document.body.insertAdjacentHTML('beforeend', modalHTML);
 
-        // Show success message
-        this.showAlert(`${bike.brand} ${bike.model} added to cart!`, 'success');
+        // Add CSS for duration options
+        const style = document.createElement('style');
+        style.textContent = `
+            .duration-option {
+                cursor: pointer;
+                transition: all 0.3s ease;
+                border: 2px solid transparent;
+            }
+            .duration-option:hover {
+                border-color: #007bff;
+                transform: translateY(-2px);
+            }
+            .duration-option.selected {
+                border-color: #007bff;
+                background-color: rgba(0, 123, 255, 0.1);
+            }
+        `;
+        document.head.appendChild(style);
 
-        // Update cart count in navigation (if exists)
-        this.updateCartCount(cartItems.length);
+        // Show modal
+        const modal = new bootstrap.Modal(document.getElementById('durationModal'));
+        modal.show();
+
+        // Add click handlers for duration options
+        document.querySelectorAll('.duration-option').forEach(option => {
+            option.addEventListener('click', function() {
+                document.querySelectorAll('.duration-option').forEach(opt => opt.classList.remove('selected'));
+                this.classList.add('selected');
+            });
+        });
+
+        // Set default selection
+        document.querySelector('.duration-option[data-duration="hourly"]').classList.add('selected');
     }
 
     updateCartCount(count) {
@@ -699,7 +859,88 @@ class BikesManager {
     }
 }
 
+// Global functions for modal functionality
+function changeQuantity(delta) {
+    const quantityInput = document.getElementById('quantity');
+    if (quantityInput) {
+        const currentValue = parseInt(quantityInput.value) || 1;
+        const newValue = Math.max(1, Math.min(10, currentValue + delta));
+        quantityInput.value = newValue;
+    }
+}
+
+function logout() {
+    if (window.authManager) {
+        window.authManager.logout();
+        // Redirect to home page
+        window.location.href = 'index.html';
+    }
+}
+
+function addSelectedToCart(bikeId) {
+    console.log('🛒 addSelectedToCart called with bikeId:', bikeId);
+    
+    const selectedDuration = document.querySelector('.duration-option.selected');
+    const quantityInput = document.getElementById('quantity');
+    
+    console.log('🔍 Selected duration element:', selectedDuration);
+    console.log('🔍 Quantity input element:', quantityInput);
+    
+    if (!selectedDuration || !quantityInput) {
+        console.error('❌ Missing duration or quantity selection');
+        console.error('Selected duration:', selectedDuration);
+        console.error('Quantity input:', quantityInput);
+        return;
+    }
+    
+    const duration = selectedDuration.getAttribute('data-duration');
+    const quantity = parseInt(quantityInput.value) || 1;
+    
+    console.log('📊 Cart data:', { bikeId, duration, quantity });
+    
+    // Get bike data
+    const bike = window.bikesManager.allBikes.find(b => b.id === bikeId);
+    console.log('🚲 Bike data found:', bike);
+    
+    if (!bike) {
+        console.error('❌ Bike not found in bikesManager.allBikes');
+        console.log('Available bikes:', window.bikesManager.allBikes);
+        return;
+    }
+    
+    // Add to cart using cart manager
+    console.log('🛒 Cart manager available:', !!window.cartManager);
+    if (window.cartManager) {
+        console.log('📝 Calling cartManager.addToCart...');
+        const success = window.cartManager.addToCart(bike, duration, quantity);
+        console.log('✅ Add to cart result:', success);
+        
+        if (success) {
+            // Close modal
+            const modal = bootstrap.Modal.getInstance(document.getElementById('durationModal'));
+            if (modal) {
+                console.log('🚪 Closing modal...');
+                modal.hide();
+            }
+        }
+    } else {
+        console.error('❌ Cart manager not available');
+        console.log('Available window objects:', Object.keys(window).filter(key => key.includes('Manager')));
+    }
+}
+
 // Initialize bikes manager when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('🚀 Initializing BikesManager...');
     window.bikesManager = new BikesManager();
+    console.log('✅ BikesManager initialized:', window.bikesManager);
+});
+
+// Listen for cart manager ready event
+window.addEventListener('cartManagerReady', function() {
+    console.log('🛒 Cart manager is ready!');
+    if (window.bikesManager) {
+        console.log('🔄 Re-rendering bikes to ensure cart integration works...');
+        window.bikesManager.renderBikes();
+    }
 });
